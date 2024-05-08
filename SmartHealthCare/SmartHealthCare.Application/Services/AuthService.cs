@@ -16,6 +16,7 @@ public class AuthService(
 	UserManager<User> userManager,
 	IUnitOfWork unitOfWork,
 	IMapper mapper,
+	IRepositoryBase<Student> studentRepositoryBase,
 	ICurrentUser currentUser) : BaseService(unitOfWork, mapper, currentUser)
 {
 	public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -43,7 +44,7 @@ public class AuthService(
 		return new LoginResponse(token, refreshToken, userResponse, role);
 	}
 
-	public async Task RegisterAsync(RegisterRequest request)
+	public async Task AddStaffAsync(AddStaffRequest request)
 	{
 		var isEmailTaken = await userManager.FindByEmailAsync(request.Email) != null;
 		if (isEmailTaken)
@@ -58,7 +59,7 @@ public class AuthService(
 			UserName = request.UserName,
 			Email = request.Email,
 			FullName = request.FullName,
-			Role = request.Role
+			Role = "staff"
 		};
 
 		await UnitOfWork.BeginTransactionAsync();
@@ -67,13 +68,57 @@ public class AuthService(
 		{
 			var result = await userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded)
-				if (user.Role.ToUpper() == "STUDENT")
-					result = await userManager.AddToRoleAsync(user, AppRole.Student.ToValue());
-				else if (user.Role.ToUpper() == "STAFF")
-					result = await userManager.AddToRoleAsync(user, AppRole.Staff.ToValue());
+				result = await userManager.AddToRoleAsync(user, AppRole.Staff.ToValue());
 			if (!result.Succeeded)
 				throw new AppException(result.Errors.First().Description);
 
+			await UnitOfWork.CommitAsync();
+		}
+		catch
+		{
+			await UnitOfWork.RollbackAsync();
+			throw;
+		}
+	}
+	public async Task AddStudentAsync(AddStudentRequest request)
+	{
+		var isEmailTaken = await userManager.FindByEmailAsync(request.Email) != null;
+		if (isEmailTaken)
+			throw new AlreadyExistsException(nameof(User.Email), request.Email);
+
+		var isUserNameTaken = await userManager.FindByNameAsync(request.UserName) != null;
+		if (isUserNameTaken)
+			throw new AlreadyExistsException(nameof(User.UserName), request.UserName);
+
+		var user = new User
+		{
+			UserName = request.UserName,
+			Email = request.Email,
+			FullName = request.FullName,
+			Role = "student"
+		};
+		
+
+		await UnitOfWork.BeginTransactionAsync();
+
+		try
+		{
+			var result = await userManager.CreateAsync(user, request.Password);
+			if (result.Succeeded)
+				result = await userManager.AddToRoleAsync(user, AppRole.Student.ToValue());
+			
+			if (!result.Succeeded)
+				throw new AppException(result.Errors.First().Description);
+			var student = new Student
+			{
+				UserId = user.Id,
+				StudentCode = request.UserName,
+				Class = request.Class,
+				Date = request.DateOfBirth,
+				Gender = request.Gender
+			};
+			studentRepositoryBase.Add(student);
+			await UnitOfWork.SaveChangesAsync();
 			await UnitOfWork.CommitAsync();
 		}
 		catch

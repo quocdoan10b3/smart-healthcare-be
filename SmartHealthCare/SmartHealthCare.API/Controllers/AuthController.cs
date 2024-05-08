@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
+using SmartHealthCare.Application.ViewModels.Auth.Requests;
 using LoginRequest = SmartHealthCare.Application.ViewModels.Auth.Requests.LoginRequest;
-using RegisterRequest = SmartHealthCare.Application.ViewModels.Auth.Requests.RegisterRequest;
 
 namespace SmartHealthCare.Controllers;
 
@@ -19,13 +19,18 @@ public class AuthController : ControllerBase
 		_tokenService = tokenService;
 	}
 
-	[HttpPost("register")]
-	public async Task<IActionResult> Register(RegisterRequest request)
+	[HttpPost("add-staff")]
+	public async Task<IActionResult> AddStaff(AddStaffRequest request)
 	{
-		await _authService.RegisterAsync(request);
+		await _authService.AddStaffAsync(request);
 		return Ok();
 	}
-
+	[HttpPost("add-student")]
+	public async Task<IActionResult> AddStudent(AddStudentRequest request)
+	{
+		await _authService.AddStudentAsync(request);
+		return Ok();
+	}
 	[HttpPost("login")]
 	public async Task<IActionResult> Login(LoginRequest request)
 	{

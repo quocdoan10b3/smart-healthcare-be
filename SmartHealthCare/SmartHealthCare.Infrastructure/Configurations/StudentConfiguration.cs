@@ -8,10 +8,12 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
 {
     public void Configure(EntityTypeBuilder<Student> builder)
     {
+        builder.Property(s => s.StudentCode);
         builder.Property(s => s.Class);
         builder.Property(s => s.Date);
         builder.Property(s => s.Gender);
-        builder.Property(s => s.Address);
+        builder.Property(s => s.Address)
+            .IsRequired(false);
         builder.HasMany(s => s.HealthRecords)
             .WithOne(hr => hr.Student)
             .HasForeignKey(hr => hr.StudentId);

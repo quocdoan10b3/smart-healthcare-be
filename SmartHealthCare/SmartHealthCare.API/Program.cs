@@ -11,7 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureLogging();
 builder.AddSettings();
 builder.Services.AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    }
+);
 
 builder.Services
     .ConfigureCors()
