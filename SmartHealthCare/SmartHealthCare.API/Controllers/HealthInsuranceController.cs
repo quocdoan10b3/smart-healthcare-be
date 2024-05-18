@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
@@ -6,6 +7,7 @@ namespace SmartHealthCare.Controllers;
 
 [ApiController]
 [Route("api/health-insurance")]
+[Authorize]
 public class HealthInsuranceController : ControllerBase
 {
     private readonly HealthInsuranceService _healthInsuranceService;

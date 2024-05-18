@@ -7,14 +7,14 @@ using SmartHealthCare.Infrastructure.Repositories.Base;
 
 namespace SmartHealthCare.Infrastructure.Repositories;
 
-public class HealthInsuranceRepository: RepositoryBase<HealthInsurance>,IHealthInsuranceRepository
+public class StudentRepository: RepositoryBase<Student>,IStudentRepository
 {
-    public IQueryable<HealthInsurance> Search(string? search)
+    public IQueryable<Student> Search(string? search)
         => string.IsNullOrWhiteSpace(search) 
-        ? GetQuery() 
-        : GetQuery(b => (!string.IsNullOrEmpty(b.InsuranceNumber) && b.InsuranceNumber.Contains(search)));
+            ? GetQuery() 
+            : GetQuery(b => (!string.IsNullOrEmpty(b.Address) && b.Address.Contains(search)));
     
-    public HealthInsuranceRepository(AppDbContext dbContext) : base(dbContext)
+    public StudentRepository(AppDbContext dbContext) : base(dbContext)
     {
     }
 }

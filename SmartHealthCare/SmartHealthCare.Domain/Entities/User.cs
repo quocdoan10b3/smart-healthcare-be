@@ -4,6 +4,7 @@ namespace SmartHealthCare.Domain.Entities;
 
 public class User : IdentityUser<int>
 {
+    public string? AvatarUrl { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public Student? Student { get; set; }

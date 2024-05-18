@@ -2,7 +2,7 @@ namespace SmartHealthCare.Application.Common.Interfaces;
 
 public interface ICurrentUser
 {
-    public string? Id { get; }
+    public int Id { get; }
     public string? Name { get; }
     public string? Email { get; }
     public string? Role { get; }

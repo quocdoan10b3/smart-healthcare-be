@@ -21,6 +21,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(StringLength.Phone);
         builder.Property(u => u.Role)
             .IsRequired();
+        builder.Property(u => u.AvatarUrl)
+            .HasMaxLength(StringLength.Url);
+        
         builder.HasData(
             new User
             {

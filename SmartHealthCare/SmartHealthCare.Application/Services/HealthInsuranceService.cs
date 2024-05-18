@@ -24,16 +24,30 @@ public class HealthInsuranceService(
 {
     public async Task<PaginatedList<HealthInsuranceRespone>> GetAllHealthInsurance(GetHealthInsurancesRequest request)
     {
-        var result = await healthInsuranceRepository.Search(request.Search)
-            .Include(u=> u.Student.User)
-            .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
-            .ToPaginatedListAsync(request.PageNumber,request.PageSize);
+        var query = healthInsuranceRepository.Search(request.Search)
+            .Include(hi => hi.Student.User)
+            .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider);
+            // .ToPaginatedListAsync(request.PageNumber,request.PageSize);
+            if (request.Filter == HealthInsuranceFilter.True)
+            {
+                query = query.Where(hi => hi.Status);
+            }
+            else if(request.Filter == HealthInsuranceFilter.False)
+            {
+                query = query.Where(hi => !hi.Status);
+            }
+        Console.Write("aaaaaaaaaaaaaaaaaaaa:",currentUser);
+        var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
 
-    public async Task<HealthInsurance> GetHealthInsuranceByStudentId(int studentId)
+    public async Task<HealthInsuranceRespone?> GetHealthInsuranceByStudentId(int studentId)
     {
-        return await healthInsuranceRepository.GetAsync(_ => _.StudentId == studentId);
+        var result = await healthInsuranceRepository.GetQuery(_ => _.StudentId == studentId)
+            .Include(hi=>hi.Student.User)
+            .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        return result;
     }
 
     public async Task AddHealthInsuranceStudent(int studentId, AddHealthInsuranceRequest request)

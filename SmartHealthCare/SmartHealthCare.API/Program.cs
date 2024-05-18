@@ -40,7 +40,10 @@ await app.MigrateDatabaseAsync();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI();
+	app.UseSwaggerUI(c =>
+    {
+        c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
+    });
 }
 
 app.UseSerilogRequestLogging();

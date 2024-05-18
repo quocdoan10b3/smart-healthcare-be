@@ -52,7 +52,7 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     
     private void SetAuditableEntityProperties()
     {
-        var userId = int.TryParse(_currentUser.Id, out var id) ? id : 0;
+        var userId = _currentUser.Id;
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
         {
             switch (entry.State)

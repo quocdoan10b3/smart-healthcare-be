@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.HealthRecord;
+using SmartHealthCare.Domain;
 
 namespace SmartHealthCare.Controllers;
 
 [ApiController]
 [Route("api/health-record")]
+// [Authorize]
 public class HealthRecordController : ControllerBase
 {
     private readonly HealthRecordService _healthRecordService;
@@ -14,6 +17,7 @@ public class HealthRecordController : ControllerBase
     {
         _healthRecordService = healthRecordService;
     }
+    // [Authorize(Roles = "admin")]
     [HttpGet()]
     public async Task<IActionResult> GetAllHealthRecords([FromQuery] GetHealthRecordsRequest pqp)
     {

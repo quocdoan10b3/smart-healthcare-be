@@ -59,7 +59,8 @@ public class AuthService(
 			UserName = request.UserName,
 			Email = request.Email,
 			FullName = request.FullName,
-			Role = "staff"
+			Role = "staff",
+			AvatarUrl = request.AvatarUrl,
 		};
 
 		await UnitOfWork.BeginTransactionAsync();
@@ -95,7 +96,8 @@ public class AuthService(
 			UserName = request.UserName,
 			Email = request.Email,
 			FullName = request.FullName,
-			Role = "student"
+			Role = "student",
+			AvatarUrl = request.AvatarUrl
 		};
 		
 
@@ -115,7 +117,8 @@ public class AuthService(
 				StudentCode = request.UserName,
 				Class = request.Class,
 				Date = request.DateOfBirth,
-				Gender = request.Gender
+				Gender = request.Gender,
+				Address = request.Address
 			};
 			studentRepositoryBase.Add(student);
 			await UnitOfWork.SaveChangesAsync();

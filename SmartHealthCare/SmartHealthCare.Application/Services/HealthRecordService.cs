@@ -26,9 +26,13 @@ public class HealthRecordService (
             .ToPaginatedListAsync(request.PageNumber,request.PageSize);
         return result;
     }
-    public async Task<HealthRecord> GetHealthRecordByStudentId(int studentId)
+    public async Task<HealthRecordResponse?> GetHealthRecordByStudentId(int studentId)
     {
-        return await healthRecordRepository.GetAsync(_ => _.StudentId == studentId);
+        var result = await healthRecordRepository.GetQuery(_ => _.StudentId == studentId)
+            .Include(hi=>hi.Student.User)
+            .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        return result;
     }
 
     public async Task AddHealthRecordStudent(int studentId, AddHealthRecordRequest request)
