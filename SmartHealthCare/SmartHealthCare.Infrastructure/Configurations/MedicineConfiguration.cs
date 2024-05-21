@@ -14,10 +14,10 @@ public class MedicineConfiguration : IEntityTypeConfiguration<Medicine>
             .IsRequired();
         builder.Property(m => m.Effect)
             .IsRequired();
-        builder.Property(m => m.ImportDate)
-            .IsRequired();
-        builder.Property(m => m.ExpDate)
-            .IsRequired();
+        // builder.Property(m => m.ImportDate)
+        //     .IsRequired();
+        // builder.Property(m => m.ExpDate)
+        //     .IsRequired();
         builder.HasMany(m => m.Prescriptions)
             .WithOne(p => p.Medicine)
             .HasForeignKey(p => p.MedicineId);

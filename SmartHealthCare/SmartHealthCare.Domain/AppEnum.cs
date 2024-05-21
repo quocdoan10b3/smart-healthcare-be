@@ -37,9 +37,9 @@ public static class EnumExtensions
 }
 #endregion
 
-public enum AppRole
-{
-    [StringValue("admin")]Admin = 1,
-    [StringValue("student")]Student = 2,
-    [StringValue("staff")]Staff = 3,
-}
+// public enum AppRole
+// {
+//     [StringValue("admin")]Admin = 1,
+//     [StringValue("student")]Student = 2,
+//     [StringValue("staff")]Staff = 3,
+// }

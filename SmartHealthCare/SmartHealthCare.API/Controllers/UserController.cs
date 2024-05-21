@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.User;
@@ -5,6 +6,7 @@ using SmartHealthCare.Application.ViewModels.User;
 namespace SmartHealthCare.Controllers;
 [ApiController]
 [Route("api/user")]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
@@ -13,6 +15,7 @@ public class UserController : ControllerBase
     {
         _userService=userService;
     }
+    // [Authorize(Roles = "admin")]
     [HttpGet()]
     public async Task<IActionResult> GetAllUsers([FromQuery] GetUsersRequest pqp)
     {

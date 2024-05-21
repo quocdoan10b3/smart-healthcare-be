@@ -16,6 +16,7 @@ using SmartHealthCare.Infrastructure.Data;
 using SmartHealthCare.Infrastructure.Email;
 using SmartHealthCare.Infrastructure.Repositories.Base;
 using SmartHealthCare.Services;
+using Minio;
 
 namespace SmartHealthCare.Extensions;
 
@@ -107,6 +108,7 @@ public static class ServiceExtension
 		// builder.Configuration.AddSystemsManager($"/{environment}", TimeSpan.FromMinutes(5));
 
 		builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+		builder.Services.Configure<MinioSettings>(builder.Configuration.GetSection("MinioSettings"));
 	}
 
 	public static IServiceCollection AddAuthentication(this IServiceCollection services,
@@ -123,6 +125,8 @@ public static class ServiceExtension
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuerSigningKey = true,
+					ValidateAudience = false,
+					ValidateIssuer = false,
 					ValidateLifetime = true,
 					IssuerSigningKey =
 						new SymmetricSecurityKey(
@@ -180,4 +184,13 @@ public static class ServiceExtension
         services.AddScoped<IEmailSender, EmailSender>();
         return services;
     }
+	public static IServiceCollection AddMinio(this IServiceCollection services, IConfiguration configuration)
+	{
+		// services.AddScoped<IImageUploader, MinioUploader>();
+		services.AddMinio(cfg => cfg
+			.WithEndpoint(configuration["MinioSettings:Endpoint"])
+			.WithCredentials(configuration["MinioSettings:AccessKey"], configuration["MinioSettings:SecretKey"]));
+		
+		return services;
+	}
 }

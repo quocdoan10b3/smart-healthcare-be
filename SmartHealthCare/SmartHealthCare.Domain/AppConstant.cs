@@ -16,3 +16,10 @@ public static class StringLength
     public const int ConfigurationJson = 4000;
     public const int Role = 16;
 }
+
+public static class AppRole
+{
+    public const string Admin = "admin";
+    public const string Student = "student";
+    public const string Staff = "staff";
+}

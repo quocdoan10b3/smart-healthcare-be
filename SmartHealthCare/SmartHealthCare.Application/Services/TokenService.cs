@@ -20,7 +20,7 @@ public class TokenService(
 	IMapper mapper,
 	ICurrentUser currentUser) : BaseService(unitOfWork, mapper, currentUser)
 {
-	public string GenerateToken(User user)
+	public string GenerateToken(User user, string role)
 	{
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var key = tokenSettings.CurrentValue.Key;
@@ -29,7 +29,8 @@ public class TokenService(
 			Subject = new ClaimsIdentity(new[]
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
+				new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+				new Claim(ClaimTypes.Role,role)
 			}),
 			Expires = DateTime.UtcNow.AddMinutes(tokenSettings.CurrentValue.ExpiryInMinutes),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),

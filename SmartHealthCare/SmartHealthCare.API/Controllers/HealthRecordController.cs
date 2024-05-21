@@ -8,7 +8,7 @@ namespace SmartHealthCare.Controllers;
 
 [ApiController]
 [Route("api/health-record")]
-// [Authorize]
+[Authorize]
 public class HealthRecordController : ControllerBase
 {
     private readonly HealthRecordService _healthRecordService;
@@ -30,7 +30,7 @@ public class HealthRecordController : ControllerBase
         var response = await _healthRecordService.GetHealthRecordByStudentId(studentId);
         return Ok(response);
     }
-
+    // [Authorize(Roles = "admin, staff")]
     [HttpPost("{studentId:int}")]
     public async Task<IActionResult> CreateHealthInsuranceStudent(int studentId, AddHealthRecordRequest request)
     {

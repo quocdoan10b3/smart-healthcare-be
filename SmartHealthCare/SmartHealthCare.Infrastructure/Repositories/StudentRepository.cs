@@ -12,7 +12,7 @@ public class StudentRepository: RepositoryBase<Student>,IStudentRepository
     public IQueryable<Student> Search(string? search)
         => string.IsNullOrWhiteSpace(search) 
             ? GetQuery() 
-            : GetQuery(b => (!string.IsNullOrEmpty(b.Address) && b.Address.Contains(search)));
+            : GetQuery(b => (!string.IsNullOrEmpty(b.User.FullName) && b.User.FullName.Contains(search)));
     
     public StudentRepository(AppDbContext dbContext) : base(dbContext)
     {

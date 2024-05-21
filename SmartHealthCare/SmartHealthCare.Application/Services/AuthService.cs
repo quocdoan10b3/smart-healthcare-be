@@ -32,14 +32,14 @@ public class AuthService(
 
 		var isPasswordValid = await userManager.CheckPasswordAsync(user, request.Password);
 		AuthException.ThrowIfFalse(isPasswordValid);
-
-		var token = tokenService.GenerateToken(user);
+		var role = userManager.GetRolesAsync(user).Result.First();
+		var token = tokenService.GenerateToken(user,role);
 		var (refreshToken, expires) = tokenService.GenerateRefreshToken();
 
 		await tokenService.SaveRefreshTokenAsync(refreshToken, user.Id, expires);
 		Console.WriteLine("user:", user);
 		var userResponse = Mapper.Map<UserResponse>(user);
-		var role = userManager.GetRolesAsync(user).Result.First();
+		
 
 		return new LoginResponse(token, refreshToken, userResponse, role);
 	}
@@ -69,7 +69,7 @@ public class AuthService(
 		{
 			var result = await userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded)
-				result = await userManager.AddToRoleAsync(user, AppRole.Staff.ToValue());
+				result = await userManager.AddToRoleAsync(user, AppRole.Staff);
 			if (!result.Succeeded)
 				throw new AppException(result.Errors.First().Description);
 
@@ -107,7 +107,7 @@ public class AuthService(
 		{
 			var result = await userManager.CreateAsync(user, request.Password);
 			if (result.Succeeded)
-				result = await userManager.AddToRoleAsync(user, AppRole.Student.ToValue());
+				result = await userManager.AddToRoleAsync(user, AppRole.Student);
 			
 			if (!result.Succeeded)
 				throw new AppException(result.Errors.First().Description);
@@ -142,8 +142,8 @@ public class AuthService(
 		           ?? throw new AuthException();
 
 		var (newRefreshToken, expires) = tokenService.GenerateRefreshToken();
-
-		var tokenDto = new RefreshTokenResponse(tokenService.GenerateToken(user), newRefreshToken);
+		var role = userManager.GetRolesAsync(user).Result.First();
+		var tokenDto = new RefreshTokenResponse(tokenService.GenerateToken(user,role), newRefreshToken);
 
 		refreshTokenEntity.Token = newRefreshToken;
 		refreshTokenEntity.Expires = expires;

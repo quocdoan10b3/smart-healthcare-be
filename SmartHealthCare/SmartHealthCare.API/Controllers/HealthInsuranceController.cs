@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
 using SmartHealthCare.Application.ViewModels.HealthInsurance;
+using SmartHealthCare.Domain;
+
 namespace SmartHealthCare.Controllers;
 
 [ApiController]
@@ -16,9 +18,11 @@ public class HealthInsuranceController : ControllerBase
     {
         _healthInsuranceService = healthInsuranceService;
     }
+    [Authorize(Roles = AppRole.Admin)]
     [HttpGet()]
     public async Task<IActionResult> GetAllHealthInsurance([FromQuery] GetHealthInsurancesRequest pqp)
     {
+        // Console.WriteLine("valueeeeeeeeeeeeeeeee: {0}", AppRole.Admin);
         var response = await _healthInsuranceService.GetAllHealthInsurance(pqp);
         return Ok(response);
     }
@@ -29,7 +33,7 @@ public class HealthInsuranceController : ControllerBase
         var response = await _healthInsuranceService.GetHealthInsuranceByStudentId(studentId);
         return Ok(response);
     }
-
+    [Authorize(Roles = AppRole.Admin)]
     [HttpPost("{studentId:int}")]
     public async Task<IActionResult> CreateHealthInsuranceStudent(int studentId, AddHealthInsuranceRequest request)
     {

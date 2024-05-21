@@ -25,4 +25,12 @@ public class StudentService(
             .ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
+    public async Task<StudentResponse?> GetStudentByUserId(int userId)
+    {
+        var result = await studentRepository.GetQuery(_ => _.UserId == userId)
+            .Include(s=> s.User)
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        return result;
+    }
 }

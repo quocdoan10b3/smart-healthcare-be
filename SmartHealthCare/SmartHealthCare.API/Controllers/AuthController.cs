@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
@@ -18,13 +19,14 @@ public class AuthController : ControllerBase
 		_authService = authService;
 		_tokenService = tokenService;
 	}
-
+	// [Authorize(Roles = "admin")]
 	[HttpPost("add-staff")]
 	public async Task<IActionResult> AddStaff(AddStaffRequest request)
 	{
 		await _authService.AddStaffAsync(request);
 		return Ok();
 	}
+	// [Authorize(Roles = "admin")]
 	[HttpPost("add-student")]
 	public async Task<IActionResult> AddStudent(AddStudentRequest request)
 	{

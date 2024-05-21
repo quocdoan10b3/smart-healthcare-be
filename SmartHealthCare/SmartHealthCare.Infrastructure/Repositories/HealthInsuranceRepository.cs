@@ -12,7 +12,7 @@ public class HealthInsuranceRepository: RepositoryBase<HealthInsurance>,IHealthI
     public IQueryable<HealthInsurance> Search(string? search)
         => string.IsNullOrWhiteSpace(search) 
         ? GetQuery() 
-        : GetQuery(b => (!string.IsNullOrEmpty(b.InsuranceNumber) && b.InsuranceNumber.Contains(search)));
+        : GetQuery(b => (!string.IsNullOrEmpty(b.Student.User.FullName) && b.Student.User.FullName.Contains(search)));
     
     public HealthInsuranceRepository(AppDbContext dbContext) : base(dbContext)
     {

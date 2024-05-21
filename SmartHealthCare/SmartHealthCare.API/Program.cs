@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using FluentValidation;
+using Minio;
 using Serilog;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Extensions;
@@ -31,6 +32,7 @@ builder.Services
     .AddProblemDetails()
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuthentication(builder.Configuration)
+    .AddMinio(builder.Configuration)
     .AddValidatorsFromAssemblyContaining<IRequest>(ServiceLifetime.Singleton);
 
 var app = builder.Build();
