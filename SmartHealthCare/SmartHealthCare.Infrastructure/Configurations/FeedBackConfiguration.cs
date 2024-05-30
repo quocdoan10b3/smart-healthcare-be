@@ -12,5 +12,11 @@ public class FeedBackConfiguration : IEntityTypeConfiguration<FeedBack>
             .IsRequired();
         builder.Property(fb => fb.Comments)
             .IsRequired();
+        builder.Property(fb => fb.CommentDate)
+            .IsRequired();
+        builder.Property(fb => fb.Response)
+            .IsRequired(false);
+        builder.Property(fb => fb.ResponseDate)
+            .IsRequired(false);
     }
 }

@@ -15,8 +15,7 @@ public class MedicineService(
     IUnitOfWork unitOfWork,
     IMapper mapper,
     ICurrentUser currentUser,
-    IMedicineRepository medicineRepository,
-    IRepositoryBase<Medicine> medicinerepositoryBase) : BaseService(unitOfWork, mapper, currentUser)
+    IMedicineRepository medicineRepository) : BaseService(unitOfWork, mapper, currentUser)
 {
     public async Task<PaginatedList<MedicineResponse>> GetAllMedicinesAsync(MedicineRequest request)
     {

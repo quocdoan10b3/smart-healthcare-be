@@ -6,6 +6,8 @@ using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Student;
+using SmartHealthCare.Domain.Entities;
+using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
 using SmartHealthCare.Domain.Repositories.Base;
 
@@ -32,5 +34,17 @@ public class StudentService(
             .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
         return result;
+    }
+    public async Task UpdateInfoStudentAsync(int studentId, UpsertStudentRequest request)
+    {
+        var student = await studentRepository.GetByIdAsync(studentId);
+        if (student == null)
+            throw new NotFoundException(nameof(Student), studentId.ToString());
+        student.Address = request.Address;
+        student.Gender = request.Gender;
+        student.Class = request.Class;
+        student.Date = request.DateOfBirth;
+        studentRepository.Update(student);
+        await UnitOfWork.SaveChangesAsync();
     }
 }

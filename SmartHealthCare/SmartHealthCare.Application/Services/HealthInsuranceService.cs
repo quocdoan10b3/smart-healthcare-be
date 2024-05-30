@@ -70,5 +70,15 @@ public class HealthInsuranceService(
             throw new ArgumentException("StudentId doesn't exist");
         }
     }
-    
+
+    public async Task UpdateStatusHealthInsuranceAsync(int id, UpsertHealthInsuranceRequest request)
+    {
+        var healthInsurance = await healthInsuranceRepository.GetByIdAsync(id);
+        if (healthInsurance == null)
+            throw new NotFoundException(nameof(HealthInsurance), id.ToString());
+        healthInsurance.Status = request.Status;
+        healthInsuranceRepository.Update(healthInsurance);
+        await UnitOfWork.SaveChangesAsync();
+    }
+
 }

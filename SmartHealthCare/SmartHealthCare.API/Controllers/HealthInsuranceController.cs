@@ -40,5 +40,12 @@ public class HealthInsuranceController : ControllerBase
         await _healthInsuranceService.AddHealthInsuranceStudent(studentId,request);
         return Ok();
     }
-    
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateStatusHealthInsurance(int id,
+        [FromBody] UpsertHealthInsuranceRequest request)
+    {
+        await _healthInsuranceService.UpdateStatusHealthInsuranceAsync(id,request);
+        return Ok();
+    }
 }

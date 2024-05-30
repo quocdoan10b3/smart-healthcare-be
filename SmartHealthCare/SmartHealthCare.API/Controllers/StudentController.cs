@@ -29,4 +29,12 @@ public class StudentController : ControllerBase
         var response = await _studentService.GetStudentByUserId(userId);
         return Ok(response);
     }
+
+    [HttpPut()]
+    public async Task<IActionResult> UpdateInfoStudent(int studentId, [FromBody] UpsertStudentRequest request)
+    {
+        await _studentService.UpdateInfoStudentAsync(studentId,request);
+        return Ok();
+    }
+    
 }
