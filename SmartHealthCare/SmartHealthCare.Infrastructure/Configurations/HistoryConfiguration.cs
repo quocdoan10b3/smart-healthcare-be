@@ -11,7 +11,7 @@ public class HistoryConfiguration : IEntityTypeConfiguration<History>
         builder.Property(h => h.UsageDate)
             .IsRequired();
         builder.Property(h => h.Reason)
-            .IsRequired();
+            .IsRequired(false);
         builder.HasMany(s => s.Prescriptions)
             .WithOne(p => p.History)
             .HasForeignKey(p => p.HistoryId);

@@ -14,5 +14,7 @@ public class HealthInsuranceConfiguration : IEntityTypeConfiguration<HealthInsur
             .IsRequired();
         builder.Property(hi => hi.Status)
             .IsRequired();
+        builder.Property(hi => hi.Scholastic)
+            .IsRequired();
     }
 }

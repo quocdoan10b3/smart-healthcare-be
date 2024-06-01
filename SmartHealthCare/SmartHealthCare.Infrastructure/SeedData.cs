@@ -25,8 +25,13 @@ public static class SeedData
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.NormalizedEmail, (_,
                 u) => u.Email?.ToUpper())
-            .RuleFor(u => u.UserName, (_,
-                u) => u.Email)
+            .RuleFor(u => u.UserName, (f,
+                u) =>
+            {
+                var year = f.Random.Int(2020, 2023).ToString();
+                var stt = f.Random.Int(1, 999).ToString("D3");
+                return $"HS{year}{stt}";
+            })
             .RuleFor(u => u.NormalizedUserName, (_,
                 u) => u.UserName?.ToUpper())
             .RuleFor(u => u.EmailConfirmed, _ => true)

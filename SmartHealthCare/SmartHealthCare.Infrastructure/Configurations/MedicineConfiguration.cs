@@ -13,7 +13,7 @@ public class MedicineConfiguration : IEntityTypeConfiguration<Medicine>
         builder.Property(m => m.Quantity)
             .IsRequired();
         builder.Property(m => m.Effect)
-            .IsRequired();
+            .IsRequired(false);
         // builder.Property(m => m.ImportDate)
         //     .IsRequired();
         // builder.Property(m => m.ExpDate)

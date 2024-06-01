@@ -20,9 +20,9 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
         builder.HasMany(s => s.Histories)
             .WithOne(h => h.Student)
             .HasForeignKey(h=>h.StudentId);
-        builder.HasOne(s => s.HealthInsurance)
+        builder.HasMany(s => s.HealthInsurances)
             .WithOne(hi => hi.Student)
-            .HasForeignKey<HealthInsurance>(hi => hi.StudentId);
+            .HasForeignKey(hi => hi.StudentId);
         builder.HasMany(s => s.FeedBacks)
             .WithOne(fb => fb.Student)
             .HasForeignKey(fb => fb.StudentId);

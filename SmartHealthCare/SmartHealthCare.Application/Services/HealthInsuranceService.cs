@@ -28,13 +28,29 @@ public class HealthInsuranceService(
             .Include(hi => hi.Student.User)
             .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider);
             // .ToPaginatedListAsync(request.PageNumber,request.PageSize);
-            if (request.Filter == HealthInsuranceFilter.True)
+            if (request.FilterStatus == HealthInsuranceFilterStatus.True)
             {
                 query = query.Where(hi => hi.Status);
             }
-            else if(request.Filter == HealthInsuranceFilter.False)
+            else if(request.FilterStatus == HealthInsuranceFilterStatus.False)
             {
                 query = query.Where(hi => !hi.Status);
+            }
+            if (request.Filter == HealthInsuranceFilter.N2020_2021)
+            {
+                query = query.Where(hi => hi.Scholastic == "2020-2021");
+            }
+            else if(request.Filter == HealthInsuranceFilter.N2021_2022)
+            {
+                query = query.Where(hi => hi.Scholastic == "2021-2022");
+            }
+            else if(request.Filter == HealthInsuranceFilter.N2022_2023)
+            {
+                query = query.Where(hi => hi.Scholastic == "2022-2023");
+            }
+            else if(request.Filter == HealthInsuranceFilter.N2023_2024)
+            {
+                query = query.Where(hi => hi.Scholastic == "2023-2024");
             }
         Console.Write("aaaaaaaaaaaaaaaaaaaa:",currentUser);
         var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);

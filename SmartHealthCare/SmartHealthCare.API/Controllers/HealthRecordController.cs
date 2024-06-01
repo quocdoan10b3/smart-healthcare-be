@@ -37,4 +37,11 @@ public class HealthRecordController : ControllerBase
         await _healthRecordService.AddHealthRecordStudent(studentId,request);
         return Ok();
     }
+
+    [HttpGet("{studentId:int}/is-examined")]
+    public async Task<IActionResult> CheckStudentIsExam(int studentId)
+    {
+        var result = await _healthRecordService.CheckStudentIsExamAsync(studentId);
+        return Ok(result);
+    }
 }

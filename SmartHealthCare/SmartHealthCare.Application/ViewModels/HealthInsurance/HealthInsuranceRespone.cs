@@ -5,10 +5,11 @@ public class HealthInsuranceRespone
 {
     public int Id { get; set; }
     public string InsuranceNumber { get; set; } = null!;
-    public string StudentName { get; set; }
+    public string StudentName { get; set; } = null!;
     public int StudentId { get; set; } 
     public DateTime ExpDate { get; set; }
     public bool Status { get; set; }
+    public string Scholastic { get; set; } = null!;
 }
 public class MapperProfile : Profile
 {

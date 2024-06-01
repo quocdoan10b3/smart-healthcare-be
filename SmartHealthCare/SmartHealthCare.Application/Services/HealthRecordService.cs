@@ -20,10 +20,28 @@ public class HealthRecordService (
 {
     public async Task<PaginatedList<HealthRecordResponse>> GetAllHealthRecords(GetHealthRecordsRequest request)
     {
-        var result = await healthRecordRepository.Search(request.Search)
-            .Include(u=> u.Student.User)
-            .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider)
-            .ToPaginatedListAsync(request.PageNumber,request.PageSize);
+        var query = healthRecordRepository.Search(request.Search)
+            .Include(u => u.Student.User)
+            .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider);
+            // .ToPaginatedListAsync(request.PageNumber,request.PageSize);
+        if (request.Filter == HealthRecordFilter.N2020_2021)
+        {
+            query = query.Where(hi => hi.Scholastic == "2020-2021");
+        }
+        else if(request.Filter == HealthRecordFilter.N2021_2022)
+        {
+            query = query.Where(hi => hi.Scholastic == "2021-2022");
+        }
+        else if(request.Filter == HealthRecordFilter.N2022_2023)
+        {
+            query = query.Where(hi => hi.Scholastic == "2022-2023");
+        }
+        else if(request.Filter == HealthRecordFilter.N2023_2024)
+        {
+            query = query.Where(hi => hi.Scholastic == "2023-2024");
+        }
+
+        var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
     public async Task<HealthRecordResponse?> GetHealthRecordByStudentId(int studentId)
@@ -59,5 +77,11 @@ public class HealthRecordService (
         {
             throw new ArgumentException("StudentId doesn't exist");
         }
+    }
+    public async Task<bool> CheckStudentIsExamAsync(int studentId)
+    {
+        var healthRecord =  await GetHealthRecordByStudentId(studentId);
+        bool isExam = healthRecord != null;
+        return isExam;
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SmartHealthCare.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class seeddata : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,9 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     FullName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -64,9 +65,7 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Effect = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImportDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Effect = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,7 +207,7 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Class = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Class = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -232,7 +231,10 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<float>(type: "real", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Response = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,7 +256,8 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     InsuranceNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     ExpDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    Scholastic = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -278,10 +281,11 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     Height = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<int>(type: "int", nullable: false),
                     Vision = table.Column<int>(type: "int", nullable: false),
-                    Hearing = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DentalHealth = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Allergies = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Hearing = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DentalHealth = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Allergies = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Scholastic = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -302,7 +306,7 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     UsageDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Reason = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -354,20 +358,20 @@ namespace SmartHealthCare.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "AvatarUrl", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "2641074e-7b4e-467f-b509-24c735930212", "example@gmail.com", true, "Admin", false, null, "EXAMPLE@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAENVmiKGQ2H+/7sCita++Kwldl6T63Lpm13bIoxA4GjS3aj4QKxoK2Py9HbRGot6+Cg==", null, false, "", "82c9feb7-5346-43c5-9888-dacc90b6b50e", false, "admin" },
-                    { 2, 0, "7ce241b0-ee18-499f-8e60-7e030d7fb9d3", "Raleigh_Cummerata35@hotmail.com", true, "Kameron Schowalter", false, null, "RALEIGH_CUMMERATA35@HOTMAIL.COM", "RALEIGH_CUMMERATA35@HOTMAIL.COM", "AQAAAAIAAYagAAAAEI5dYYIpLtXCczu0y20Rn7ncpeZ1QqsIXJFHItaxnQwUGcw3Q12twJO45Dz73dMvTw==", null, false, "", "8b526ad7-4e92-418d-aa30-536c2f9738fb", false, "Raleigh_Cummerata35@hotmail.com" },
-                    { 3, 0, "e307e7d4-2712-4ad3-8d23-e8d7b63ebf7a", "Tyrell.Gislason@yahoo.com", true, "Toby Schamberger", false, null, "TYRELL.GISLASON@YAHOO.COM", "TYRELL.GISLASON@YAHOO.COM", "AQAAAAIAAYagAAAAENe7vk+PkgdNJtYb5qhqenRpc59JYiUKlrlPq4EhQSjqC+wgYGH4z0Ip5mK94CS0rA==", null, false, "", "4cb65477-5fed-49a6-a3fd-691b5d3c81d5", false, "Tyrell.Gislason@yahoo.com" },
-                    { 4, 0, "8ed30601-d850-4a08-9439-32fd8f1e8dd9", "Corrine49@yahoo.com", true, "Percival Collins", false, null, "CORRINE49@YAHOO.COM", "CORRINE49@YAHOO.COM", "AQAAAAIAAYagAAAAEDvrUu0wz9Ei69t58/H8X7cLF/HBYnHtruJ6L3JgdlgpksCWt8CjR9lhv8SReFHckw==", null, false, "", "2c29193e-7a9e-4094-bd56-59860a9907bc", false, "Corrine49@yahoo.com" },
-                    { 5, 0, "e405250a-e38e-41a7-843a-590b83528b90", "Jules.Labadie@gmail.com", true, "Tiffany Maggio", false, null, "JULES.LABADIE@GMAIL.COM", "JULES.LABADIE@GMAIL.COM", "AQAAAAIAAYagAAAAEJ/ESaLxhxE8zJkHbPSsgoLXJPDwZvIoo37/ySfLCWk+xYc8OLh6FGBSO77Fi95/Xw==", null, false, "", "6bcb5487-f66e-4f95-8b5a-39b24d89190a", false, "Jules.Labadie@gmail.com" },
-                    { 6, 0, "8c82b043-1f36-4d4b-91d8-eb61ba3f0870", "Agustina_Schamberger37@gmail.com", true, "Christiana Homenick", false, null, "AGUSTINA_SCHAMBERGER37@GMAIL.COM", "AGUSTINA_SCHAMBERGER37@GMAIL.COM", "AQAAAAIAAYagAAAAEIklceEiXd/kx/0UhUYp3gI7t77PUvuA69K7a+fzNNcyHAXUWj/lCu4gDMzZ67xjzQ==", null, false, "", "f33704c4-1dee-434f-b26d-8bcb88491d10", false, "Agustina_Schamberger37@gmail.com" },
-                    { 7, 0, "20efacda-d72e-4a5b-8692-1dbbbe473fe6", "Mose_Green@gmail.com", true, "Howard Kihn", false, null, "MOSE_GREEN@GMAIL.COM", "MOSE_GREEN@GMAIL.COM", "AQAAAAIAAYagAAAAEEBhqKIVYKeep9kv1ACJ0BMRIjA5cm/oqZbdfZvQQoN+ZFHb8+pl5+rEpgTD3ubJtQ==", null, false, "", "d44dce38-dc71-4675-861c-6200224d2be3", false, "Mose_Green@gmail.com" },
-                    { 8, 0, "4c15100e-a6da-4cdf-9162-8f1eccdee39b", "Jazmin_Hayes@hotmail.com", true, "Alvera Jerde", false, null, "JAZMIN_HAYES@HOTMAIL.COM", "JAZMIN_HAYES@HOTMAIL.COM", "AQAAAAIAAYagAAAAEN8y1zGuKgQy6uUQ7iZA9+NYE01ruPVi2xe7DEtybm6UX5yiT83E3SKBt72zyo27Ng==", null, false, "", "420ee887-b8d8-472d-ab04-483b244d45ae", false, "Jazmin_Hayes@hotmail.com" },
-                    { 9, 0, "19416cab-cf1f-40ec-b98b-1117df8bd609", "Orville_Predovic@yahoo.com", true, "Serena Koelpin", false, null, "ORVILLE_PREDOVIC@YAHOO.COM", "ORVILLE_PREDOVIC@YAHOO.COM", "AQAAAAIAAYagAAAAECD/iAajTjwTcttj/0ro1K/OgvmpCdzt51vc9vw+t/zm01BjZzb0XlO7ERSl06N4Sg==", null, false, "", "89710e99-91fe-45a9-a3e0-6886423b1ced", false, "Orville_Predovic@yahoo.com" },
-                    { 10, 0, "321b088d-9358-4d8a-af21-24253e536cf3", "Adah.Hoeger@gmail.com", true, "Euna Wolf", false, null, "ADAH.HOEGER@GMAIL.COM", "ADAH.HOEGER@GMAIL.COM", "AQAAAAIAAYagAAAAENIlpyE3mnRjgONZvT7nYdmVfn6pSQiCxww5kcaz0/RNAtD3bemVu6fikuwTV/dMPQ==", null, false, "", "63d73237-e84a-4392-a58f-f0b367df70db", false, "Adah.Hoeger@gmail.com" },
-                    { 11, 0, "aba2c43b-eef2-4220-9234-ed0f47d0f942", "Bernadette67@yahoo.com", true, "Ruby Gorczany", false, null, "BERNADETTE67@YAHOO.COM", "BERNADETTE67@YAHOO.COM", "AQAAAAIAAYagAAAAEIw2Fsympsj8O5QktYMrQMexrO6J+Y9nsDT7014Qm3B7kSIVHk24B3A/C+o4T8KxCw==", null, false, "", "dc107a26-3df2-4019-ae30-9a90c0955a24", false, "Bernadette67@yahoo.com" }
+                    { 1, 0, null, "c5a7d47f-b393-4a35-aa50-19acf1e75c4e", "example@gmail.com", true, "Admin", false, null, "EXAMPLE@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAED25TdgEROy7/3rOTE0Q709ulPk4etrtURFV3DDP7o5qPfeSsVHaEwRNLTjJ+/NOew==", null, false, "", "3f20af03-e399-4216-9a87-bd72a92e95a1", false, "admin" },
+                    { 2, 0, null, "effd5985-977a-44c4-ac6b-fbff9f3704ea", "Stuart_Jaskolski50@hotmail.com", true, "Emily Heathcote", false, null, "STUART_JASKOLSKI50@HOTMAIL.COM", "HS2021867", "AQAAAAIAAYagAAAAENdAVU/lQx/R4vunjLALfBK057LQD0KjRPtql8SXBy42h6ccuKOud2oBYahbJM1wTg==", null, false, "", "987ecb3d-c76f-4e48-aade-348b299c705d", false, "HS2021867" },
+                    { 3, 0, null, "455e0210-05e0-4368-b1f5-74fd0b22dd52", "Ayden24@gmail.com", true, "Alysson McDermott", false, null, "AYDEN24@GMAIL.COM", "HS2021844", "AQAAAAIAAYagAAAAEPkjejBz0FhZQwuYci4jWmrn3z3d0/Eioh3478Rkw9BpcB70bWx9t7xJYkvfC6G6Rg==", null, false, "", "839a0899-0e76-4e13-8fe3-0ee8bf62f67e", false, "HS2021844" },
+                    { 4, 0, null, "ab668ee6-87d9-4823-a89d-d19206364631", "Elena11@hotmail.com", true, "Stanton Cruickshank", false, null, "ELENA11@HOTMAIL.COM", "HS2022320", "AQAAAAIAAYagAAAAEJAjyqpBVPL5sUNSqfebs0OpS9Lneec7zaYyfs6z9LjqaZazfeT4HjH5RpLx5D2c2w==", null, false, "", "3c96324d-b8e0-4eeb-9b50-f4c7ab05a404", false, "HS2022320" },
+                    { 5, 0, null, "ab12240d-7570-4844-af25-054452002559", "Arturo54@gmail.com", true, "Hobart Klocko", false, null, "ARTURO54@GMAIL.COM", "HS2023505", "AQAAAAIAAYagAAAAEKBofNrcVS95oo6xs47ktdDzUaQTrp0QH8sx9kEDMZvcAwjIk+Pts9nCXkyPPE9oPg==", null, false, "", "9d003780-795c-451b-85b5-e4bd9f52e655", false, "HS2023505" },
+                    { 6, 0, null, "2d3f6c95-c4e6-462e-b3f7-c4abd4e47d2d", "Dangelo.Bahringer77@hotmail.com", true, "Ewell Gislason", false, null, "DANGELO.BAHRINGER77@HOTMAIL.COM", "HS2020423", "AQAAAAIAAYagAAAAEDp9pMiyFM7WubXQjN2xGe5ES2VOYpkg7dStJEtl4EF2kDmAGER+2uwo4i+zReJbdQ==", null, false, "", "c0fdf8a6-08e9-4051-9637-284185ef0618", false, "HS2020423" },
+                    { 7, 0, null, "cc872f95-2e78-44be-81ff-3560eac2fd53", "Adalberto45@hotmail.com", true, "Brycen Pacocha", false, null, "ADALBERTO45@HOTMAIL.COM", "HS2020698", "AQAAAAIAAYagAAAAEPV6cigNt1m8Ez25Ouv8Tr+Ap6IZl9iVLYirpWd9cSBpR3mpzXSy7L1TMgFkrOPyGg==", null, false, "", "336b9135-0c94-4816-96c5-3b7f63372f4d", false, "HS2020698" },
+                    { 8, 0, null, "2fdaeb6b-cba2-4e58-8b21-960804c24ee2", "Ellie.Hilpert95@yahoo.com", true, "Otha Heaney", false, null, "ELLIE.HILPERT95@YAHOO.COM", "HS2023931", "AQAAAAIAAYagAAAAEBgrsjhadclCjgLyZzPMIn4qHBKYJVPAqtf/Aio4R8tPtbUqvyw/V/o/mrBlyGEKRw==", null, false, "", "47552f79-9804-41c9-9ed7-c08afc2c7333", false, "HS2023931" },
+                    { 9, 0, null, "974b6ad9-81aa-402b-ae0c-dd67d0de5793", "Ike.Walter@gmail.com", true, "Damien Christiansen", false, null, "IKE.WALTER@GMAIL.COM", "HS2023609", "AQAAAAIAAYagAAAAEJqe2rL2fSqjZR/adwQec4m1FcM2goQRnJQHctQrezjOFVbai6C9P45cNeqW0uCR2w==", null, false, "", "777b505b-2711-47e6-a065-926069a8447c", false, "HS2023609" },
+                    { 10, 0, null, "ec914a93-11dd-48f6-b040-1b2e968298f8", "Ozella.Ondricka@hotmail.com", true, "Ola Torp", false, null, "OZELLA.ONDRICKA@HOTMAIL.COM", "HS2020275", "AQAAAAIAAYagAAAAEKuRG/XDGjuyMFJx5W/8KUCV7qZomizC4h19d7J4WQibu+cbUUntZ7j3ZTWrSbm9MA==", null, false, "", "72518e7b-435e-42c0-a28b-5167cf9050d5", false, "HS2020275" },
+                    { 11, 0, null, "1e77711f-e952-4ac9-ad28-15b901e5494c", "David_Windler@hotmail.com", true, "Maureen Torphy", false, null, "DAVID_WINDLER@HOTMAIL.COM", "HS2020064", "AQAAAAIAAYagAAAAEHFrazSs3olB/qnSXS+l4Dwe6B9YzdU8YnTGMH2UdLuTXERMAQgLKJDC8Hfj3aWLcw==", null, false, "", "6f0ba570-0a65-4ecb-bc69-bfe39d84d04f", false, "HS2020064" }
                 });
 
             migrationBuilder.InsertData(
@@ -380,16 +384,16 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 columns: new[] { "Id", "Address", "Class", "Date", "Gender", "StudentCode", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "38534 Schaefer Wells, Rebekahfurt, Australia", "9A", new DateTime(2014, 7, 23, 2, 34, 2, 944, DateTimeKind.Unspecified).AddTicks(7932), false, "Raleigh_Cummerata35@hotmail.com", 2 },
-                    { 2, "592 Mortimer Spur, Borisland, United States of America", "9A", new DateTime(2013, 8, 9, 10, 39, 31, 754, DateTimeKind.Unspecified).AddTicks(7745), true, "Tyrell.Gislason@yahoo.com", 3 },
-                    { 3, "6193 Manley Camp, North Dan, Turkey", "9A", new DateTime(2008, 6, 11, 9, 35, 18, 723, DateTimeKind.Unspecified).AddTicks(9313), true, "Corrine49@yahoo.com", 4 },
-                    { 4, "18605 Scarlett Cliffs, Adahmouth, Serbia", "9A", new DateTime(2011, 12, 2, 17, 22, 37, 473, DateTimeKind.Unspecified).AddTicks(1517), false, "Jules.Labadie@gmail.com", 5 },
-                    { 5, "6970 Adam Mill, Beckermouth, Puerto Rico", "9A", new DateTime(2011, 5, 23, 10, 13, 28, 547, DateTimeKind.Unspecified).AddTicks(3875), true, "Agustina_Schamberger37@gmail.com", 6 },
-                    { 6, "1985 Erling Rue, North Janisfort, Bermuda", "9A", new DateTime(2016, 7, 13, 15, 5, 42, 345, DateTimeKind.Unspecified).AddTicks(9021), false, "Mose_Green@gmail.com", 7 },
-                    { 7, "006 Aufderhar Mountains, Russelbury, Bangladesh", "9A", new DateTime(2018, 11, 13, 3, 30, 56, 474, DateTimeKind.Unspecified).AddTicks(5274), true, "Jazmin_Hayes@hotmail.com", 8 },
-                    { 8, "7296 Ole Union, Bradtkefort, Malta", "9A", new DateTime(2014, 5, 7, 23, 17, 56, 653, DateTimeKind.Unspecified).AddTicks(2514), true, "Orville_Predovic@yahoo.com", 9 },
-                    { 9, "090 Schoen Forks, Eastonland, Belgium", "9A", new DateTime(2009, 1, 11, 5, 9, 39, 126, DateTimeKind.Unspecified).AddTicks(3390), true, "Adah.Hoeger@gmail.com", 10 },
-                    { 10, "951 Alda Grove, Lake Murphyside, Uzbekistan", "9A", new DateTime(2012, 4, 22, 17, 46, 50, 189, DateTimeKind.Unspecified).AddTicks(2570), false, "Bernadette67@yahoo.com", 11 }
+                    { 1, "4325 Dagmar Squares, Kerlukeborough, Costa Rica", "9A", new DateTime(2011, 8, 22, 18, 7, 1, 727, DateTimeKind.Unspecified).AddTicks(5366), true, "HS2021867", 2 },
+                    { 2, "1931 Torrance Harbors, Eunicemouth, Brazil", "9A", new DateTime(2012, 8, 31, 13, 40, 29, 240, DateTimeKind.Unspecified).AddTicks(6587), true, "HS2021844", 3 },
+                    { 3, "330 Beer Square, Denesikstad, Poland", "9A", new DateTime(2011, 4, 2, 0, 53, 11, 469, DateTimeKind.Unspecified).AddTicks(3239), false, "HS2022320", 4 },
+                    { 4, "5664 Crona Cape, South Colinton, Chile", "9A", new DateTime(2010, 12, 21, 13, 36, 59, 540, DateTimeKind.Unspecified).AddTicks(6800), true, "HS2023505", 5 },
+                    { 5, "7799 Loyal Prairie, Maychester, Netherlands Antilles", "9A", new DateTime(2010, 3, 8, 12, 8, 39, 620, DateTimeKind.Unspecified).AddTicks(6589), true, "HS2020423", 6 },
+                    { 6, "49687 Schumm Springs, New Tyra, Honduras", "9A", new DateTime(2010, 5, 8, 6, 58, 16, 410, DateTimeKind.Unspecified).AddTicks(1833), false, "HS2020698", 7 },
+                    { 7, "75313 Swift Summit, Lake Gina, Mali", "9A", new DateTime(2008, 9, 23, 4, 30, 26, 760, DateTimeKind.Unspecified).AddTicks(9323), false, "HS2023931", 8 },
+                    { 8, "646 Odell Trail, Wolffville, Central African Republic", "9A", new DateTime(2013, 8, 10, 23, 48, 38, 336, DateTimeKind.Unspecified).AddTicks(2425), false, "HS2023609", 9 },
+                    { 9, "18646 Benton Points, Lake Jeanette, Antarctica (the territory South of 60 deg S)", "9A", new DateTime(2012, 2, 14, 10, 9, 34, 158, DateTimeKind.Unspecified).AddTicks(7737), true, "HS2020275", 10 },
+                    { 10, "05223 Otis Stream, Barrowsstad, Guatemala", "9A", new DateTime(2012, 1, 25, 23, 48, 16, 56, DateTimeKind.Unspecified).AddTicks(817), false, "HS2020064", 11 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -453,8 +457,7 @@ namespace SmartHealthCare.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_HealthInsurances_StudentId",
                 table: "HealthInsurances",
-                column: "StudentId",
-                unique: true);
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HealthRecords_StudentId",

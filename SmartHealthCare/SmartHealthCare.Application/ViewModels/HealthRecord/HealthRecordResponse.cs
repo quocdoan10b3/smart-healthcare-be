@@ -13,7 +13,8 @@ public class HealthRecordResponse
     public string DentalHealth { get; set; } = null!;
     public string Allergies { get; set; } = null!;
     public string Notes { get; set; } = null!;
-    public string StudentName { get; set; }
+    public string StudentName { get; set; } = null!;
+    public string Scholastic { get; set; } = null!;
 }
 public class MapperProfile : Profile
 {
