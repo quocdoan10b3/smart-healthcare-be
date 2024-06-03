@@ -37,4 +37,16 @@ public enum HealthInsuranceFilter
     N2022_2023,
     [EnumMember(Value = "2023-2024")]
     N2023_2024,
+    [EnumMember(Value = "2024-2025")]
+    N2024_2025,
+    [EnumMember(Value = "2025-2026")]
+    N2025_2026,
+    [EnumMember(Value = "2026-2027")]
+    N2026_2027,
+    [EnumMember(Value = "2027-2028")]
+    N2027_2028,
+    [EnumMember(Value = "2028-2029")]
+    N2028_2029,
+    [EnumMember(Value = "2029-2030")]
+    N2029_2030
 }

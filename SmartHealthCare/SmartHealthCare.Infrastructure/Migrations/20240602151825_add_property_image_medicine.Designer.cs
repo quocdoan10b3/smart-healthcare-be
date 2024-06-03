@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHealthCare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SmartHealthCare.Infrastructure.Data;
 namespace SmartHealthCare.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240602151825_add_property_image_medicine")]
+    partial class add_property_image_medicine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,8 +317,8 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Reason")
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -339,48 +342,28 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Effect")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("ExpDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageMedicine")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Medicines");
-                });
-
-            modelBuilder.Entity("SmartHealthCare.Domain.Entities.MedicineImport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ExpDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ImportDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MedicineId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsedCount")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("MedicineId");
-
-                    b.ToTable("MedicineImport");
+                    b.ToTable("Medicines");
                 });
 
             modelBuilder.Entity("SmartHealthCare.Domain.Entities.Prescription", b =>
@@ -478,101 +461,101 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "34828 Moore Field, West Mozelle, Panama",
+                            Address = "94437 Schmitt Island, Teaganport, Saint Barthelemy",
                             Class = "9A",
-                            Date = new DateTime(2015, 8, 3, 8, 35, 40, 232, DateTimeKind.Unspecified).AddTicks(1562),
+                            Date = new DateTime(2011, 11, 17, 17, 4, 24, 388, DateTimeKind.Unspecified).AddTicks(6118),
                             Gender = false,
-                            StudentCode = "HS2021012",
+                            StudentCode = "HS2021925",
                             UserId = 2
                         },
                         new
                         {
                             Id = 2,
-                            Address = "2230 Heathcote Drive, South Lamar, Tunisia",
+                            Address = "083 Farrell Hollow, Harveyland, Christmas Island",
                             Class = "9A",
-                            Date = new DateTime(2011, 11, 16, 14, 31, 42, 384, DateTimeKind.Unspecified).AddTicks(7196),
+                            Date = new DateTime(2011, 12, 28, 14, 28, 37, 301, DateTimeKind.Unspecified).AddTicks(5814),
                             Gender = true,
-                            StudentCode = "HS2021816",
+                            StudentCode = "HS2021312",
                             UserId = 3
                         },
                         new
                         {
                             Id = 3,
-                            Address = "463 Jaycee Roads, Port Gregoria, Venezuela",
+                            Address = "96331 Verdie Center, Bechtelarberg, Finland",
                             Class = "9A",
-                            Date = new DateTime(2010, 6, 11, 19, 7, 12, 776, DateTimeKind.Unspecified).AddTicks(1604),
+                            Date = new DateTime(2008, 3, 11, 20, 26, 10, 90, DateTimeKind.Unspecified).AddTicks(5555),
                             Gender = true,
-                            StudentCode = "HS2022722",
+                            StudentCode = "HS2020102",
                             UserId = 4
                         },
                         new
                         {
                             Id = 4,
-                            Address = "24638 Welch Extension, Lake Jeromemouth, Cyprus",
+                            Address = "5345 Hilll Stream, Larrymouth, Guam",
                             Class = "9A",
-                            Date = new DateTime(2017, 11, 19, 22, 41, 9, 4, DateTimeKind.Unspecified).AddTicks(741),
-                            Gender = true,
-                            StudentCode = "HS2023157",
+                            Date = new DateTime(2014, 11, 18, 12, 38, 48, 281, DateTimeKind.Unspecified).AddTicks(3419),
+                            Gender = false,
+                            StudentCode = "HS2021365",
                             UserId = 5
                         },
                         new
                         {
                             Id = 5,
-                            Address = "999 Electa Keys, Marcelinomouth, Turkey",
+                            Address = "09156 Spencer Fords, New Allenmouth, Libyan Arab Jamahiriya",
                             Class = "9A",
-                            Date = new DateTime(2009, 12, 31, 12, 40, 36, 78, DateTimeKind.Unspecified).AddTicks(661),
+                            Date = new DateTime(2017, 12, 29, 10, 48, 13, 814, DateTimeKind.Unspecified).AddTicks(5617),
                             Gender = true,
-                            StudentCode = "HS2021901",
+                            StudentCode = "HS2021081",
                             UserId = 6
                         },
                         new
                         {
                             Id = 6,
-                            Address = "371 Lorna Square, Lake Ivory, Hong Kong",
+                            Address = "28508 Paucek Walk, South Connorfort, Puerto Rico",
                             Class = "9A",
-                            Date = new DateTime(2011, 1, 1, 20, 35, 23, 116, DateTimeKind.Unspecified).AddTicks(5521),
+                            Date = new DateTime(2010, 5, 11, 17, 55, 57, 197, DateTimeKind.Unspecified).AddTicks(3251),
                             Gender = false,
-                            StudentCode = "HS2021213",
+                            StudentCode = "HS2022166",
                             UserId = 7
                         },
                         new
                         {
                             Id = 7,
-                            Address = "88941 Bessie Village, New Marcia, Fiji",
+                            Address = "61821 Amari Parks, Morganstad, Jordan",
                             Class = "9A",
-                            Date = new DateTime(2014, 7, 3, 17, 22, 17, 527, DateTimeKind.Unspecified).AddTicks(6171),
+                            Date = new DateTime(2015, 7, 5, 1, 28, 37, 537, DateTimeKind.Unspecified).AddTicks(4667),
                             Gender = false,
-                            StudentCode = "HS2021737",
+                            StudentCode = "HS2022192",
                             UserId = 8
                         },
                         new
                         {
                             Id = 8,
-                            Address = "783 Langosh Rapid, Kasandrahaven, Austria",
+                            Address = "263 Streich Manors, East Earleneville, Mozambique",
                             Class = "9A",
-                            Date = new DateTime(2012, 7, 2, 5, 3, 19, 89, DateTimeKind.Unspecified).AddTicks(3542),
-                            Gender = true,
-                            StudentCode = "HS2021930",
+                            Date = new DateTime(2008, 8, 6, 15, 4, 57, 34, DateTimeKind.Unspecified).AddTicks(5082),
+                            Gender = false,
+                            StudentCode = "HS2020269",
                             UserId = 9
                         },
                         new
                         {
                             Id = 9,
-                            Address = "33077 Roselyn Isle, Neldaville, Finland",
+                            Address = "115 Leffler Lock, Jastchester, Liberia",
                             Class = "9A",
-                            Date = new DateTime(2008, 8, 29, 4, 11, 59, 35, DateTimeKind.Unspecified).AddTicks(7122),
+                            Date = new DateTime(2012, 7, 13, 13, 26, 49, 167, DateTimeKind.Unspecified).AddTicks(5492),
                             Gender = false,
-                            StudentCode = "HS2023605",
+                            StudentCode = "HS2023140",
                             UserId = 10
                         },
                         new
                         {
                             Id = 10,
-                            Address = "75379 Torp Shores, Champlinchester, Western Sahara",
+                            Address = "21786 Muhammad Street, North Marcel, Fiji",
                             Class = "9A",
-                            Date = new DateTime(2018, 3, 2, 12, 56, 45, 563, DateTimeKind.Unspecified).AddTicks(2250),
-                            Gender = true,
-                            StudentCode = "HS2021907",
+                            Date = new DateTime(2015, 11, 20, 4, 16, 27, 383, DateTimeKind.Unspecified).AddTicks(9232),
+                            Gender = false,
+                            StudentCode = "HS2022165",
                             UserId = 11
                         });
                 });
@@ -672,17 +655,17 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "af1617cb-0735-44d6-bd4e-e103fe84cb8a",
+                            ConcurrencyStamp = "fa199d9d-8a20-4a62-8b30-fa8e85b9cc37",
                             Email = "example@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "EXAMPLE@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAECGAvtq/X4k1BAEY8M3NwyTIQXO0lxI42gzgxqQAtcCBAASFnNbPOR7wh9Oy7tbfMA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECK4h0ACqRI7MzKhAII1ZG505SwUvW/B2HU9kPdg06yPw0vs8HsAPqS7bS8ewwn+nA==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "da103fa3-e574-4e36-af1a-3bca52a8f98d",
+                            SecurityStamp = "02754361-beca-4fbc-a85b-6924d17f3c1f",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -690,181 +673,181 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f26bf51e-f341-4c94-98a9-b6d39636f7b4",
-                            Email = "Lizzie91@gmail.com",
+                            ConcurrencyStamp = "3e880ffb-9298-41dc-98eb-7cc1393270d5",
+                            Email = "Maverick62@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Annamarie Luettgen",
+                            FullName = "Deangelo Fisher",
                             LockoutEnabled = false,
-                            NormalizedEmail = "LIZZIE91@GMAIL.COM",
-                            NormalizedUserName = "HS2021012",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMHlJgJqL57F2cq87R7RmV5T78uRh9pp8u+YZ4GW7b0yAGIQv3t6aV3tEEbiYsQ45A==",
+                            NormalizedEmail = "MAVERICK62@GMAIL.COM",
+                            NormalizedUserName = "HS2021925",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHNZzk4uupEka901yvYQehcPBKREEI0NdvtT8AwjIzHshQe3Re8DGWHsJxX1oNA+HA==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "464e701f-4641-4a92-a2e1-270f7e2a524a",
+                            SecurityStamp = "9d95697e-125f-4cd3-bff3-99fd7ba1c9c5",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021012"
+                            UserName = "HS2021925"
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0023d56e-f11a-4d36-9818-2d03e855bdbe",
-                            Email = "Ubaldo15@hotmail.com",
+                            ConcurrencyStamp = "7dd33481-85ed-426f-907b-95001632520b",
+                            Email = "Lance_Barton@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Ramon White",
+                            FullName = "Jude Trantow",
                             LockoutEnabled = false,
-                            NormalizedEmail = "UBALDO15@HOTMAIL.COM",
-                            NormalizedUserName = "HS2021816",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM4dsgOmsApe7LyBE2N9oTJD6TqQDmjIinq8nq7Zh2GeznbTqeghJRBhxD5VdBf/zg==",
+                            NormalizedEmail = "LANCE_BARTON@GMAIL.COM",
+                            NormalizedUserName = "HS2021312",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEgwFaZxIg6uspmSrr0zlqvZw3QWH1vfczmH5JLSZO8G4DX78IuN0Ej/7dFof2wA0A==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "5659a0ee-6a1f-403a-998d-e9baeba7c479",
+                            SecurityStamp = "a949ca0f-c4cf-4ec9-b324-2390b79415a9",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021816"
+                            UserName = "HS2021312"
                         },
                         new
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05be68bb-4b68-4fe6-8caf-3d8aa04b463c",
-                            Email = "Elena29@yahoo.com",
+                            ConcurrencyStamp = "3eb1d8d7-f23e-48e2-b557-14fed4af6272",
+                            Email = "Teresa_Larkin22@yahoo.com",
                             EmailConfirmed = true,
-                            FullName = "Keegan Schneider",
+                            FullName = "Melany Davis",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ELENA29@YAHOO.COM",
-                            NormalizedUserName = "HS2022722",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMHUb6BNFweHprlUPQ42/td2xIjLYmJqMehS38D4WsWU3TcELOnZvBrPb33tbf9OZA==",
+                            NormalizedEmail = "TERESA_LARKIN22@YAHOO.COM",
+                            NormalizedUserName = "HS2020102",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBweI2nL5yZXc1d+OPP5ywbAxt1me1S7poJgoKtMf3U/odZ9ylgG1PwuOq2um4eF6g==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "1b811a70-9aee-4f61-81f7-3b3ea1dad895",
+                            SecurityStamp = "bcd14695-dd39-46e2-b2de-a3fe39bda277",
                             TwoFactorEnabled = false,
-                            UserName = "HS2022722"
+                            UserName = "HS2020102"
                         },
                         new
                         {
                             Id = 5,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bdd94064-c5af-4758-9d7b-b1050ca44508",
-                            Email = "Precious.Mann97@hotmail.com",
+                            ConcurrencyStamp = "452c2027-6527-414c-9b6c-5a1ba87dabc5",
+                            Email = "Davin.Jenkins12@yahoo.com",
                             EmailConfirmed = true,
-                            FullName = "Vicente Rodriguez",
+                            FullName = "Gilda Wyman",
                             LockoutEnabled = false,
-                            NormalizedEmail = "PRECIOUS.MANN97@HOTMAIL.COM",
-                            NormalizedUserName = "HS2023157",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHbZu74WCNxHn8pR80aNAUqxqTKqqzaIuXp+ElwgQj1/SAhNYsVqQhLfFP8bYceuCA==",
+                            NormalizedEmail = "DAVIN.JENKINS12@YAHOO.COM",
+                            NormalizedUserName = "HS2021365",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBn8XLw4U62nMSivXSS837lva27aZ8o0kBIZL9d6kQiM4Vuo+kgY3I/2jjCPdvAVkw==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "384c70f0-e163-4aa6-989c-a3143a7b2791",
+                            SecurityStamp = "7ec51d88-2fce-4f3c-82e6-79bf564001cf",
                             TwoFactorEnabled = false,
-                            UserName = "HS2023157"
+                            UserName = "HS2021365"
                         },
                         new
                         {
                             Id = 6,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "24deafaf-05de-4b58-b22a-958fe476b673",
-                            Email = "Krystel.Friesen72@yahoo.com",
+                            ConcurrencyStamp = "cfe7444f-7f0e-4190-967a-9f132afac9fb",
+                            Email = "Erica.Haag@hotmail.com",
                             EmailConfirmed = true,
-                            FullName = "Gloria Powlowski",
+                            FullName = "Mikel Leffler",
                             LockoutEnabled = false,
-                            NormalizedEmail = "KRYSTEL.FRIESEN72@YAHOO.COM",
-                            NormalizedUserName = "HS2021901",
-                            PasswordHash = "AQAAAAIAAYagAAAAENnkTwsnLGOOu0S/VdbsGkuqAg0MTTNRjBGdtdE+XkqEJXbULLgUyY2cno/GCsJ1Lw==",
+                            NormalizedEmail = "ERICA.HAAG@HOTMAIL.COM",
+                            NormalizedUserName = "HS2021081",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFc1VyTh2+BQAtw1pGNbTFEKadjA2jeX+mzevx14oD4yJ45cWYRpEB8wBMc8AMLZYQ==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "60837039-2b29-4256-947d-2185da614820",
+                            SecurityStamp = "abb4da86-828a-42d7-a027-84ded01257cd",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021901"
+                            UserName = "HS2021081"
                         },
                         new
                         {
                             Id = 7,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "21b8cae1-ac5c-42cc-8f1d-63340e98d36c",
-                            Email = "Angelita_Schneider@hotmail.com",
+                            ConcurrencyStamp = "b267dcec-0d5b-40c7-ae68-7b618c99bb91",
+                            Email = "Agnes.DuBuque86@yahoo.com",
                             EmailConfirmed = true,
-                            FullName = "Shanna Crona",
+                            FullName = "May Rice",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ANGELITA_SCHNEIDER@HOTMAIL.COM",
-                            NormalizedUserName = "HS2021213",
-                            PasswordHash = "AQAAAAIAAYagAAAAEICHawrUMXJB1vsYRH02Ziz2bJKVfMwyK8qLToVYxkgCazy2MS9aB4nrUojxFAJS4g==",
+                            NormalizedEmail = "AGNES.DUBUQUE86@YAHOO.COM",
+                            NormalizedUserName = "HS2022166",
+                            PasswordHash = "AQAAAAIAAYagAAAAENvo4zUxS6cBgePE52Hs+o7X2/DAewg7jSgDcX4skRBYIBvdkip/aYgIxpH01sc+DQ==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "5bcd559a-0d26-4c34-9efe-00244a182249",
+                            SecurityStamp = "0175b9df-480b-4aec-9d3b-95e0bf192286",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021213"
+                            UserName = "HS2022166"
                         },
                         new
                         {
                             Id = 8,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e8a5311-d693-4792-8ead-ab2c24f0897f",
-                            Email = "Warren16@yahoo.com",
+                            ConcurrencyStamp = "17825feb-b0c5-4844-91d3-0a8913d080ef",
+                            Email = "Maximilian_Maggio89@hotmail.com",
                             EmailConfirmed = true,
-                            FullName = "Hester Stark",
+                            FullName = "Elsie Schamberger",
                             LockoutEnabled = false,
-                            NormalizedEmail = "WARREN16@YAHOO.COM",
-                            NormalizedUserName = "HS2021737",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBClsHYAzcWVYGURZA7aM3jtcFpMZslUpsFvxcZlOdouDh6Nfw19IOsRA7tBB1CXqQ==",
+                            NormalizedEmail = "MAXIMILIAN_MAGGIO89@HOTMAIL.COM",
+                            NormalizedUserName = "HS2022192",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJUl2Tlkeapj+Bi1YijhkDXKRLCPfOVKuUuc8IBB8/GB/Dp3EsfLqBFcWKqvgqyXag==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "1b95c23c-3f91-41bf-8789-78537f6892b8",
+                            SecurityStamp = "6d55f3a1-3696-428c-b4ed-2d31bca3d5b2",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021737"
+                            UserName = "HS2022192"
                         },
                         new
                         {
                             Id = 9,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "24db54af-4a97-4e3b-8340-cbef7acda42d",
-                            Email = "Krista.Schneider@yahoo.com",
+                            ConcurrencyStamp = "ad293b60-d539-43ed-9066-e88040e3cac0",
+                            Email = "Freddie75@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Delores Connelly",
+                            FullName = "Helena Stoltenberg",
                             LockoutEnabled = false,
-                            NormalizedEmail = "KRISTA.SCHNEIDER@YAHOO.COM",
-                            NormalizedUserName = "HS2021930",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOdC6OThe5QOWDxyqjnwIBET+BklW4g9umZjrvwlrnnZugBF7OJ8An0SvCioRjRs0A==",
+                            NormalizedEmail = "FREDDIE75@GMAIL.COM",
+                            NormalizedUserName = "HS2020269",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGUTkKDY15V02JLDdk8VAdZmUKyBD3wBArqySzkGXF70zLsF+c/PhNGITwkxTGai6g==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "1fde3b21-d593-4d90-8f21-ac3e88d9ac72",
+                            SecurityStamp = "5ac139d8-fbc9-4e84-9865-fd9f733766c6",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021930"
+                            UserName = "HS2020269"
                         },
                         new
                         {
                             Id = 10,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8fb1120a-3a46-49c0-a268-b5421a2d3ab5",
-                            Email = "Norris.Hintz95@gmail.com",
+                            ConcurrencyStamp = "29c174c2-6a4a-4bb1-a5f5-7276ac4d6b93",
+                            Email = "Marta.Howe8@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Adella Daniel",
+                            FullName = "Jeramie Shields",
                             LockoutEnabled = false,
-                            NormalizedEmail = "NORRIS.HINTZ95@GMAIL.COM",
-                            NormalizedUserName = "HS2023605",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMHXU5NP6YLq00fV8fdStthKXAzOgzl1gyoHYM4orbNqevoPpHOkhQs7elpgtgRnXg==",
+                            NormalizedEmail = "MARTA.HOWE8@GMAIL.COM",
+                            NormalizedUserName = "HS2023140",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOwxTaZJqei5S0OQ8aVcbvmoUNIbNEiqlRIiAojTaHp4fOpuTej3djA35fhMtE/gaQ==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "0a24c91f-8c18-4ef2-aaf1-51982a1f4bf8",
+                            SecurityStamp = "0233a65f-e6d8-438b-8227-0aedf28b1765",
                             TwoFactorEnabled = false,
-                            UserName = "HS2023605"
+                            UserName = "HS2023140"
                         },
                         new
                         {
                             Id = 11,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "584c31c6-cae9-44b4-9448-ce076f24d41b",
-                            Email = "Maribel34@gmail.com",
+                            ConcurrencyStamp = "90737ca2-e67f-408b-b87c-d97b17f24814",
+                            Email = "Anahi57@gmail.com",
                             EmailConfirmed = true,
-                            FullName = "Orlo Fahey",
+                            FullName = "Elisa Green",
                             LockoutEnabled = false,
-                            NormalizedEmail = "MARIBEL34@GMAIL.COM",
-                            NormalizedUserName = "HS2021907",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFLHL9OS0MfBSynmd0Xf9VARxePrNvrvbciLeJaH5iS/Xa5xx99zzEu0b0Zdm2fo8w==",
+                            NormalizedEmail = "ANAHI57@GMAIL.COM",
+                            NormalizedUserName = "HS2022165",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPYOzER455GXdHbHFUHLAZW59hMi9s05pAkyTPrvkfQO5EWrrUitzVMRbUH5KyaHLQ==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "2287eb11-c569-4ada-af91-9139686ac0b3",
+                            SecurityStamp = "0f466ada-8faf-4804-8ad6-e62469230704",
                             TwoFactorEnabled = false,
-                            UserName = "HS2021907"
+                            UserName = "HS2022165"
                         });
                 });
 
@@ -963,17 +946,6 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SmartHealthCare.Domain.Entities.MedicineImport", b =>
-                {
-                    b.HasOne("SmartHealthCare.Domain.Entities.Medicine", "Medicine")
-                        .WithMany("MedicineImports")
-                        .HasForeignKey("MedicineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Medicine");
-                });
-
             modelBuilder.Entity("SmartHealthCare.Domain.Entities.Prescription", b =>
                 {
                     b.HasOne("SmartHealthCare.Domain.Entities.History", "History")
@@ -1022,8 +994,6 @@ namespace SmartHealthCare.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartHealthCare.Domain.Entities.Medicine", b =>
                 {
-                    b.Navigation("MedicineImports");
-
                     b.Navigation("Prescriptions");
                 });
 

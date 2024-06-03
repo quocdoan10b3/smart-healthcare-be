@@ -27,8 +27,4 @@
       </Compile>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Common\" />
-    </ItemGroup>
-
 </Project>

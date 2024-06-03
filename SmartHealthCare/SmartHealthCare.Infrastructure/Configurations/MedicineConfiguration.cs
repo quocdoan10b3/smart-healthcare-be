@@ -10,14 +10,11 @@ public class MedicineConfiguration : IEntityTypeConfiguration<Medicine>
     {
         builder.Property(m => m.Name)
             .IsRequired();
-        builder.Property(m => m.Quantity)
-            .IsRequired();
+
         builder.Property(m => m.Effect)
             .IsRequired(false);
-        // builder.Property(m => m.ImportDate)
-        //     .IsRequired();
-        // builder.Property(m => m.ExpDate)
-        //     .IsRequired();
+        builder.Property(m => m.ImageMedicine)
+            .IsRequired(false);
         builder.HasMany(m => m.Prescriptions)
             .WithOne(p => p.Medicine)
             .HasForeignKey(p => p.MedicineId);

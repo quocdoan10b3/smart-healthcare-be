@@ -27,4 +27,11 @@ public class UsageMedicineController : ControllerBase
         var response = await _usageMedicineService.GetUsageMedicinesByStudentIdAsync(studentId);
         return Ok(response);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> UsageMedicineByStudentId(int studentId , AddUsageMedicineRequest request)
+    {
+        await _usageMedicineService.UsageMedicineByStudentIdAsync(studentId, request);
+        return Ok();
+    }
 }

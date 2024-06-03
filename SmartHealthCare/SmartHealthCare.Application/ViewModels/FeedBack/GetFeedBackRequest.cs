@@ -14,6 +14,7 @@ public class GetFeedBackRequest : PagingRequest
 public enum FeedBackSortByOption
 {
     Id,
+    CommentDate,
     Rating,
 }
 // [JsonConverter(typeof(JsonStringEnumConverter))]

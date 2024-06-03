@@ -21,18 +21,22 @@ public class MedicineController : ControllerBase
         var response = await _medicineService.GetAllMedicinesAsync(pqp);
         return Ok(response);
     }
-    // [Authorize(Roles = "admin")]
     [HttpPost("add-medicine")]
     public async Task<IActionResult> AddMedicine(AddMedicineRequest request)
     {
         await _medicineService.AddMedicineAsync(request);
         return Ok();
     }
-    // [Authorize(Roles = "admin")]
-    [HttpPost("use-medicine")]
-    public async Task<IActionResult> UseMedicine(SubMedicineRequest request)
+    [HttpPost("import-medicine")]
+    public async Task<IActionResult> ImportMedicine(ImportMedicineRequest request)
     {
-        await _medicineService.SubMedicineAsync(request);
+        await _medicineService.ImportMedicineAsync(request);
         return Ok();
+    }
+    [HttpGet("import-medicine")]
+    public async Task<IActionResult> GetAllImportMedicines([FromQuery] HistoryImportRequest pqp)
+    {
+        var response = await _medicineService.GetAllImportMedicinesAsync(pqp);
+        return Ok(response);
     }
 }

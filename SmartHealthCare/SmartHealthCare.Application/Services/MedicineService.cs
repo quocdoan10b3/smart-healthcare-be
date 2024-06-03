@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
+using SmartHealthCare.Application.ViewModels.ImportMedicine;
 using SmartHealthCare.Application.ViewModels.Medicine;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Repositories;
 using SmartHealthCare.Domain.Repositories.Base;
+using MedicineResponse = SmartHealthCare.Domain.Repositories.MedicineResponse;
 
 namespace SmartHealthCare.Application.Services;
 
@@ -15,79 +17,68 @@ public class MedicineService(
     IUnitOfWork unitOfWork,
     IMapper mapper,
     ICurrentUser currentUser,
-    IMedicineRepository medicineRepository) : BaseService(unitOfWork, mapper, currentUser)
+    IMedicineRepository medicineRepository,
+    IImportMedicineRepository importMedicineRepository) : BaseService(unitOfWork, mapper, currentUser)
 {
     public async Task<PaginatedList<MedicineResponse>> GetAllMedicinesAsync(MedicineRequest request)
     {
-        var result = await medicineRepository.Search(request.Search)
-            .ProjectTo<MedicineResponse>(Mapper.ConfigurationProvider)
+        var medicinesQuery = await medicineRepository.GetAggregatedMedicinesAsync(request.Search);
+        var result = await medicinesQuery
             .ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
-
+    public async Task<PaginatedList<HistoryImportResponse>> GetAllImportMedicinesAsync(HistoryImportRequest request)
+    {
+        var result = await importMedicineRepository.Search(request.Search)
+            .Include(mi => mi.Medicine)
+            .OrderBy(GetOrderByField(request.SortBy), request.IsDescending)
+            .ProjectTo<HistoryImportResponse>(Mapper.ConfigurationProvider)
+            .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+        return result;
+    }
     public async Task AddMedicineAsync(AddMedicineRequest request)
     {
-        var isMedicine = medicineRepository.GetQuery()
-            .Where(m => m.Name == request.Name)
-            .FirstOrDefaultAsync()
-            .Result;
-        
-        
-        await UnitOfWork.BeginTransactionAsync();
-        try
+        var medicine = new Medicine
         {
-            if (isMedicine == null)
-            {
-                var medicine = new Medicine
-                {
-                    Name = request.Name,
-                    Quantity = request.Quantity,
-                    Effect = request.Effect,
-                    // ImportDate = request.ImportDate,
-                    // ExpDate = request.ExpDate
-                };
-                medicineRepository.Add(medicine);
-            }
-            else
-            {
-                isMedicine.Quantity += request.Quantity;
-            }
+            Name = request.Name,
             
-            await UnitOfWork.SaveChangesAsync();
-            await UnitOfWork.CommitAsync();
-        }
-        catch
+            Effect = request.Effect,
+            
+            ImageMedicine = request.ImageMedicine,
+        };
+        medicineRepository.Add(medicine);
+        await unitOfWork.SaveChangesAsync();
+    }
+    public async Task ImportMedicineAsync(ImportMedicineRequest request)
+    {
+        bool medicineExists = await medicineRepository.AnyAsync(request.MedicineId);
+        if (medicineExists)
         {
-            await UnitOfWork.RollbackAsync();
-            throw;
+            var medicineImport = new MedicineImport
+            {
+                Quantity = request.Quantity,
+                UsedCount = 0,
+                MedicineId = request.MedicineId,
+                ImportDate = request.ImportDate,
+                ExpDate = request.ExpDate
+            };
+            importMedicineRepository.Add(medicineImport);
+            await unitOfWork.SaveChangesAsync();
+        }
+        else
+        {
+            throw new ArgumentException("MedicineId doesn't exist");
         }
     }
-
-    public async Task SubMedicineAsync(SubMedicineRequest request)
+    private static IOrderByField GetOrderByField(ImportMedicineSortByOption? option)
     {
-        var medicine = medicineRepository.GetQuery()
-            .Where(m => m.Id == request.Id)
-            .FirstOrDefaultAsync()
-            .Result;
-        
-        await UnitOfWork.BeginTransactionAsync();
-        try
+        return option switch
         {
-            if (medicine != null && medicine.Quantity > 0 && medicine.Quantity > request.Quantity)
-            {
-                medicine.Quantity -= request.Quantity;
-            }
-            else
-            {
-                throw new InvalidOperationException("Invalid medicine data or insufficient quantity.");
-            }
-            await UnitOfWork.SaveChangesAsync();
-            await UnitOfWork.CommitAsync();
-        }
-        catch
-        {
-            await UnitOfWork.RollbackAsync();
-            throw;
-        }
+            ImportMedicineSortByOption.Id
+                => new OrderByField<MedicineImport, int>(x => x.Id),
+            ImportMedicineSortByOption.ImportDate
+                => new OrderByField<MedicineImport, DateTime>(fb => fb.ImportDate),
+            _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+        };
     }
 }

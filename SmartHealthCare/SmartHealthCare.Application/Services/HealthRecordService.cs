@@ -5,6 +5,7 @@ using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.HealthRecord;
+using SmartHealthCare.Domain.Common;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Repositories;
 using SmartHealthCare.Domain.Repositories.Base;
@@ -24,35 +25,25 @@ public class HealthRecordService (
             .Include(u => u.Student.User)
             .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider);
             // .ToPaginatedListAsync(request.PageNumber,request.PageSize);
-        if (request.Filter == HealthRecordFilter.N2020_2021)
-        {
-            query = query.Where(hi => hi.Scholastic == "2020-2021");
-        }
-        else if(request.Filter == HealthRecordFilter.N2021_2022)
-        {
-            query = query.Where(hi => hi.Scholastic == "2021-2022");
-        }
-        else if(request.Filter == HealthRecordFilter.N2022_2023)
-        {
-            query = query.Where(hi => hi.Scholastic == "2022-2023");
-        }
-        else if(request.Filter == HealthRecordFilter.N2023_2024)
-        {
-            query = query.Where(hi => hi.Scholastic == "2023-2024");
-        }
-
+            var scholasticYear = request.Filter.GetEnumMemberValue().ToString();
+            if (scholasticYear != "None")
+                query = query.Where(hr => hr.Scholastic == scholasticYear);
         var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
-    public async Task<HealthRecordResponse?> GetHealthRecordByStudentId(int studentId)
+    public async Task<List<HealthRecordResponse>> GetHealthRecordByStudentId(int studentId)
     {
+        // var result = await healthRecordRepository.GetQuery(_ => _.StudentId == studentId)
+        //     .Include(hi=>hi.Student.User)
+        //     .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider)
+        //     .FirstOrDefaultAsync();
         var result = await healthRecordRepository.GetQuery(_ => _.StudentId == studentId)
-            .Include(hi=>hi.Student.User)
+            .Include(hi => hi.Student.User)
             .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .ToListAsync();
         return result;
     }
-
+    
     public async Task AddHealthRecordStudent(int studentId, AddHealthRecordRequest request)
     {
         bool studentExists = await studentRepository.AnyAsync(studentId);
@@ -68,7 +59,8 @@ public class HealthRecordService (
                 Hearing = request.Hearing,
                 DentalHealth = request.DentalHealth,
                 Allergies = request.Allergies,
-                Notes = request.Notes
+                Notes = request.Notes,
+                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}"
             };
             healthRecordRepository.Add(healthRecordStudent);
             await unitOfWork.SaveChangesAsync();
@@ -78,10 +70,29 @@ public class HealthRecordService (
             throw new ArgumentException("StudentId doesn't exist");
         }
     }
-    public async Task<bool> CheckStudentIsExamAsync(int studentId)
+    public async Task<bool> CheckStudentIsExamAsync(int studentId,int currentYear)
     {
-        var healthRecord =  await GetHealthRecordByStudentId(studentId);
-        bool isExam = healthRecord != null;
-        return isExam;
+        var healthRecords =  await GetHealthRecordByStudentId(studentId);
+        foreach (var healthRecord in healthRecords)
+        {
+            string scholastic = healthRecord.Scholastic;
+            string[] years = scholastic.Split('-');
+            if (years.Length == 2 && int.TryParse(years[0], out int startYear))
+            {
+                if (startYear == currentYear)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public async Task<List<string>> GetAllScholasticYearsAsync()
+    {
+        var scholasticYears = await healthRecordRepository.GetQuery()
+            .Select(hr => hr.Scholastic)
+            .Distinct()
+            .ToListAsync();
+        return scholasticYears;
     }
 }

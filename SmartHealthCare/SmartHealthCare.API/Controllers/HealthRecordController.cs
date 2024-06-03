@@ -38,10 +38,16 @@ public class HealthRecordController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{studentId:int}/is-examined")]
-    public async Task<IActionResult> CheckStudentIsExam(int studentId)
+    [HttpGet("{studentId:int}/is-examined/{currentYear:int}")]
+    public async Task<IActionResult> CheckStudentIsExam(int studentId,int currentYear)
     {
-        var result = await _healthRecordService.CheckStudentIsExamAsync(studentId);
+        var result = await _healthRecordService.CheckStudentIsExamAsync(studentId,currentYear);
         return Ok(result);
+    }
+    [HttpGet("list-scholastic")]
+    public async Task<IActionResult> GetAllScholasticYears()
+    {
+        var response = await _healthRecordService.GetAllScholasticYearsAsync();
+        return Ok(response);
     }
 }

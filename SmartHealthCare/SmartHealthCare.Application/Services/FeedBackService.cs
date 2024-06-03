@@ -22,6 +22,7 @@ public class FeedBackService(
     public async Task<PaginatedList<FeedBackResponse>> GetAllFeedBacksAsync(GetFeedBackRequest request)
     {
         var result = await feedBackRepository.Search(request.Search)
+            .OrderBy(GetOrderByField(request.SortBy), request.IsDescending)
             .ProjectTo<FeedBackResponse>(Mapper.ConfigurationProvider)
             .ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
@@ -56,5 +57,18 @@ public class FeedBackService(
         feedBack.ResponseDate = DateTime.Today;
         feedBackRepository.Update(feedBack);
         await UnitOfWork.SaveChangesAsync();
+    }
+    private static IOrderByField GetOrderByField(FeedBackSortByOption? option)
+    {
+        return option switch
+        {
+            FeedBackSortByOption.Id
+                => new OrderByField<FeedBack, int>(x => x.Id),
+            FeedBackSortByOption.Rating
+                => new OrderByField<FeedBack, float>(x => x.Rating),
+            FeedBackSortByOption.CommentDate
+                => new OrderByField<FeedBack, DateTime>(fb => fb.CommentDate),
+            _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
+        };
     }
 }

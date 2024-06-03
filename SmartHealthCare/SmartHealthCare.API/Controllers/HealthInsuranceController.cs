@@ -48,4 +48,16 @@ public class HealthInsuranceController : ControllerBase
         await _healthInsuranceService.UpdateStatusHealthInsuranceAsync(id,request);
         return Ok();
     }
+    [HttpGet("{studentId:int}/is_health_insurance/{currentYear:int}")]
+    public async Task<IActionResult> CheckHealthInsuranceStudent(int studentId,int currentYear)
+    {
+        var result = await _healthInsuranceService.CheckStudentHasHealthInsuranceAsync(studentId,currentYear);
+        return Ok(result);
+    }
+    [HttpGet("list-scholastic")]
+    public async Task<IActionResult> GetAllScholasticYears()
+    {
+        var response = await _healthInsuranceService.GetAllScholasticYearsAsync();
+        return Ok(response);
+    }
 }

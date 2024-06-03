@@ -8,6 +8,7 @@ using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
 using SmartHealthCare.Application.ViewModels.HealthInsurance;
 using SmartHealthCare.Domain;
+using SmartHealthCare.Domain.Common;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
@@ -36,33 +37,25 @@ public class HealthInsuranceService(
             {
                 query = query.Where(hi => !hi.Status);
             }
-            if (request.Filter == HealthInsuranceFilter.N2020_2021)
-            {
-                query = query.Where(hi => hi.Scholastic == "2020-2021");
-            }
-            else if(request.Filter == HealthInsuranceFilter.N2021_2022)
-            {
-                query = query.Where(hi => hi.Scholastic == "2021-2022");
-            }
-            else if(request.Filter == HealthInsuranceFilter.N2022_2023)
-            {
-                query = query.Where(hi => hi.Scholastic == "2022-2023");
-            }
-            else if(request.Filter == HealthInsuranceFilter.N2023_2024)
-            {
-                query = query.Where(hi => hi.Scholastic == "2023-2024");
-            }
+            var scholasticYear = request.Filter.GetEnumMemberValue().ToString();
+            Console.Write("a1a1:{0}",scholasticYear);
+            if (scholasticYear != "None")
+            query = query.Where(hi => hi.Scholastic == scholasticYear);
         Console.Write("aaaaaaaaaaaaaaaaaaaa:",currentUser);
         var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);
         return result;
     }
 
-    public async Task<HealthInsuranceRespone?> GetHealthInsuranceByStudentId(int studentId)
+    public async Task<List<HealthInsuranceRespone>> GetHealthInsuranceByStudentId(int studentId)
     {
+        // var result = await healthInsuranceRepository.GetQuery(_ => _.StudentId == studentId)
+        //     .Include(hi=>hi.Student.User)
+        //     .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
+        //     .FirstOrDefaultAsync();
         var result = await healthInsuranceRepository.GetQuery(_ => _.StudentId == studentId)
             .Include(hi=>hi.Student.User)
             .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .ToListAsync();
         return result;
     }
 
@@ -77,6 +70,7 @@ public class HealthInsuranceService(
                 StudentId = studentId,
                 ExpDate = request.ExpDate,
                 Status = request.Status,
+                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}"
             };
             healthInsuranceRepository.Add(healthInsuranceStudent);
             await unitOfWork.SaveChangesAsync();
@@ -96,5 +90,29 @@ public class HealthInsuranceService(
         healthInsuranceRepository.Update(healthInsurance);
         await UnitOfWork.SaveChangesAsync();
     }
-
+    public async Task<bool> CheckStudentHasHealthInsuranceAsync(int studentId,int currentYear)
+    {
+        var healthInsurances =  await GetHealthInsuranceByStudentId(studentId);
+        foreach (var healthInsurance in healthInsurances)
+        {
+            string scholastic = healthInsurance.Scholastic;
+            string[] years = scholastic.Split('-');
+            if (years.Length == 2 && int.TryParse(years[0], out int startYear))
+            {
+                if (startYear == currentYear)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public async Task<List<string>> GetAllScholasticYearsAsync()
+    {
+        var scholasticYears = await healthInsuranceRepository.GetQuery()
+            .Select(hr => hr.Scholastic)
+            .Distinct()
+            .ToListAsync();
+        return scholasticYears;
+    }
 }

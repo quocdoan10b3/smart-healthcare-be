@@ -10,5 +10,5 @@ public class HistoryRequest : PagingRequest
 public enum HistoriesSortByOption
 {
     Id,
-    Name,
+    StudentName,
 }
