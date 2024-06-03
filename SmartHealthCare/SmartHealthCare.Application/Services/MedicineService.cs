@@ -70,6 +70,38 @@ public class MedicineService(
             throw new ArgumentException("MedicineId doesn't exist");
         }
     }
+    public async Task ImportNewMedicineAsync(ImportNewMedicineRequest request)
+    {
+        await UnitOfWork.BeginTransactionAsync();
+        try
+        {
+            var newMedicine = new Medicine
+            {
+                Name = request.NameMedicine,
+                Effect = request.Effect,
+                ImageMedicine = request.ImageMedicine,
+            };
+            medicineRepository.Add(newMedicine);
+            await UnitOfWork.SaveChangesAsync();
+            var medicineId = newMedicine.Id;
+            var medicineImport = new MedicineImport
+            {
+                Quantity = request.Quantity,
+                UsedCount = 0,
+                MedicineId = medicineId,
+                ImportDate = request.ImportDate,
+                ExpDate = request.ExpDate
+            };
+            importMedicineRepository.Add(medicineImport);
+            await UnitOfWork.SaveChangesAsync();
+            await UnitOfWork.CommitAsync();
+        }
+        catch
+        {
+            await UnitOfWork.RollbackAsync();
+            throw;
+        }
+    }
     private static IOrderByField GetOrderByField(ImportMedicineSortByOption? option)
     {
         return option switch

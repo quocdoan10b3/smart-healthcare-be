@@ -39,4 +39,10 @@ public class MedicineController : ControllerBase
         var response = await _medicineService.GetAllImportMedicinesAsync(pqp);
         return Ok(response);
     }
+    [HttpPost("import-new-medicine")]
+    public async Task<IActionResult> ImportNewMedicine(ImportNewMedicineRequest request)
+    {
+        await _medicineService.ImportNewMedicineAsync(request);
+        return Ok();
+    }
 }
