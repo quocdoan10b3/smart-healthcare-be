@@ -33,12 +33,12 @@ public class UsageMedicineService(
         return result;
     }
 
-    public async Task<HistoryResponse?> GetUsageMedicinesByStudentIdAsync(int studentId)
+    public async Task<PaginatedList<HistoryResponse>> GetUsageMedicinesByStudentIdAsync(int studentId,HistoryRequest request)
     {
         var result = await usageMedicineRepository.GetQuery(_ => _.StudentId == studentId)
             .Include(h=>h.Prescriptions)
             .ProjectTo<HistoryResponse>(Mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .ToPaginatedListAsync(request.PageNumber,request.PageSize);
         return result;
     }
 

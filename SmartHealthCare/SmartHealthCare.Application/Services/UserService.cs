@@ -22,4 +22,17 @@ public class UserService(
     {
         return await userManager.Users.ToPaginatedListAsync(request.PageNumber, request.PageSize);
     }
+
+    public async Task<User> GetUserByIdAsync(int userId)
+    {
+        return await userManager.Users.Where(u=> u.Id == userId).FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateAvatarAsync(int userId, UpsertUserRequest request)
+    {
+        var user = userManager.Users.Where(u => u.Id == userId).FirstOrDefaultAsync().Result;
+        if( user != null ) user.AvatarUrl = request.AvatarUrl;
+        await UnitOfWork.SaveChangesAsync();
+        
+    }
 }

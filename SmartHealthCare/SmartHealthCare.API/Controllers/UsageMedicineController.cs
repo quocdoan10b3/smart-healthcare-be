@@ -22,13 +22,13 @@ public class UsageMedicineController : ControllerBase
         return Ok(response);
     }
     [HttpGet("{studentId:int}")]
-    public async Task<IActionResult> GetUsageMedicines(int studentId)
+    public async Task<IActionResult> GetUsageMedicines(int studentId, [FromQuery] HistoryRequest pqp)
     {
-        var response = await _usageMedicineService.GetUsageMedicinesByStudentIdAsync(studentId);
+        var response = await _usageMedicineService.GetUsageMedicinesByStudentIdAsync(studentId,pqp);
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost("{studentId:int}")]
     public async Task<IActionResult> UsageMedicineByStudentId(int studentId , AddUsageMedicineRequest request)
     {
         await _usageMedicineService.UsageMedicineByStudentIdAsync(studentId, request);

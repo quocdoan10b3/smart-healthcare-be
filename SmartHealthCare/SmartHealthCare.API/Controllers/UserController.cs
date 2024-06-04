@@ -22,4 +22,16 @@ public class UserController : ControllerBase
         var response = await _userService.GetAllUserAsync(pqp);
         return Ok(response);
     }
+    [HttpGet("{userId:int}")]
+    public async Task<IActionResult> GetUserByIdAsync(int userId)
+    {
+        var response = await _userService.GetUserByIdAsync(userId);
+        return Ok(response);
+    }
+    [HttpPut("{userId:int}")]
+    public async Task<IActionResult> UpdateAvatar(int userId,[FromBody] UpsertUserRequest request)
+    {
+        await _userService.UpdateAvatarAsync(userId,request);
+        return Ok();
+    }
 }

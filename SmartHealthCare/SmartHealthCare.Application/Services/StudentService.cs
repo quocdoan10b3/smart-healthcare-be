@@ -6,6 +6,7 @@ using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Student;
+using SmartHealthCare.Domain.Common;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
@@ -21,10 +22,13 @@ public class StudentService(
 {
     public async Task<PaginatedList<StudentResponse>> GetAllStudentsAsync(GetStudentsRequest request)
     {
-        var result = await studentRepository.Search(request.Search)
+        var query = studentRepository.Search(request.Search)
             .Include(s => s.User)
-            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
-            .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider);
+            var grade = request.Filter.GetEnumMemberValue();
+                if (grade != "None")
+                    query = query.Where(s=>s.Class.StartsWith(grade));
+        var result = await query.ToPaginatedListAsync(request.PageNumber, request.PageSize);                
         return result;
     }
     public async Task<StudentResponse?> GetStudentByUserId(int userId)
