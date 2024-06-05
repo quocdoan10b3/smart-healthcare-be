@@ -7,6 +7,7 @@ using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
 using SmartHealthCare.Application.ViewModels.HealthInsurance;
+using SmartHealthCare.Application.ViewModels.Student;
 using SmartHealthCare.Domain;
 using SmartHealthCare.Domain.Common;
 using SmartHealthCare.Domain.Entities;
@@ -53,6 +54,19 @@ public class HealthInsuranceService(
         //     .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
         //     .FirstOrDefaultAsync();
         var result = await healthInsuranceRepository.GetQuery(_ => _.StudentId == studentId)
+            .Include(hi=>hi.Student.User)
+            .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
+            .ToListAsync();
+        return result;
+    }
+    public async Task<List<HealthInsuranceRespone>> GetHealthInsuranceByUserIdAsync(int userId)
+    {
+        var student = await studentRepository.GetQuery(_ => _.UserId == userId)
+            .Include(s=> s.User)
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+
+        var result = await healthInsuranceRepository.GetQuery(_ => _.StudentId == student.Id)
             .Include(hi=>hi.Student.User)
             .ProjectTo<HealthInsuranceRespone>(Mapper.ConfigurationProvider)
             .ToListAsync();

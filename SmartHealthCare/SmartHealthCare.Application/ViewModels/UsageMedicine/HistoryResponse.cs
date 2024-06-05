@@ -13,6 +13,7 @@ public class HistoryResponse
     public string StudentName { get; set; } = null!;
     public string ClassStudent { get; set; } = null!;
     public List<PrescriptionResponse> PrescriptionResponses { get; set; } = new List<PrescriptionResponse>();
+    public string StudentCode { get; set; } = null!;
 }
 public class MapperProfile : Profile
 {
@@ -21,6 +22,7 @@ public class MapperProfile : Profile
         CreateMap<Domain.Entities.History, HistoryResponse>()
             .ForMember(dto => dto.StudentName, opt => opt.MapFrom(h => h.Student.User.FullName))
             .ForMember(dto => dto.PrescriptionResponses, opt => opt.MapFrom(h => h.Prescriptions))
+            .ForMember(dto => dto.StudentCode, opt => opt.MapFrom(h => h.Student.StudentCode))
             .ForMember(dto => dto.ClassStudent, opt => opt.MapFrom(h=> h.Student.Class));
     }
 }

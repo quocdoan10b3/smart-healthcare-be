@@ -60,4 +60,11 @@ public class HealthInsuranceController : ControllerBase
         var response = await _healthInsuranceService.GetAllScholasticYearsAsync();
         return Ok(response);
     }
+
+    [HttpGet("userId/{userId:int}")]
+    public async Task<IActionResult> GetHealthInsuranceByUserId(int userId)
+    {
+        var response = await _healthInsuranceService.GetHealthInsuranceByUserIdAsync(userId);
+        return Ok(response);
+    }
 }

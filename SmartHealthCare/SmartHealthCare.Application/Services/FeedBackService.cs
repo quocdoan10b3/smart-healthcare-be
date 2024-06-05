@@ -1,10 +1,12 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.FeedBack;
 using SmartHealthCare.Application.ViewModels.Medicine;
+using SmartHealthCare.Application.ViewModels.Student;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
@@ -36,6 +38,29 @@ public class FeedBackService(
             var feedBack = new FeedBack
             {
                 StudentId = studentId,
+                Rating = request.Rating,
+                Comments = request.Comments,
+                CommentDate = DateTime.Today
+            };
+            feedBackRepository.Add(feedBack);
+            await unitOfWork.SaveChangesAsync();
+        }
+        else
+        {
+            throw new ArgumentException("StudentId doesn't exist");
+        }
+    }
+    public async Task CreateFeedBackByStudentUserIdAsync(int userId, AddFeedBackRequest request)
+    {
+        var student = await studentRepository.GetQuery(_ => _.UserId == userId)
+            .Include(s=> s.User)
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        if (student != null)
+        {
+            var feedBack = new FeedBack
+            {
+                StudentId = student.Id,
                 Rating = request.Rating,
                 Comments = request.Comments,
                 CommentDate = DateTime.Today

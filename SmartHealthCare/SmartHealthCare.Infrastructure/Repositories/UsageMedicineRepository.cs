@@ -11,7 +11,8 @@ public class UsageMedicineRepository : RepositoryBase<History>, IUsageMedicineRe
     public IQueryable<History> Search(string? search)
         => string.IsNullOrWhiteSpace(search) 
             ? GetQuery() 
-            : GetQuery(b => (!string.IsNullOrEmpty(b.Student.User.FullName) && b.Student.User.FullName.Contains(search)));
+            : GetQuery(b => (!string.IsNullOrEmpty(b.Student.User.FullName) && b.Student.User.FullName.Contains(search)) ||
+                            (!string.IsNullOrEmpty(b.UsageDate.ToString()) && b.UsageDate.ToString().Contains(search)));
     
     public UsageMedicineRepository(AppDbContext dbContext) : base(dbContext)
     {

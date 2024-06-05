@@ -31,6 +31,12 @@ public class FeedBackController : ControllerBase
         await _feedBackService.CreateFeedBackByStudentAsync(studentId,request);
         return Ok();
     }
+    [HttpPost("student/{userId:int}")]
+    public async Task<IActionResult> CreateFeedBackByStudentUserId(int userId, AddFeedBackRequest request)
+    {
+        await _feedBackService.CreateFeedBackByStudentUserIdAsync(userId,request);
+        return Ok();
+    }
     [Authorize(Roles = AppRole.Admin)]
     [HttpPut("{feedBackId}")]
     public async Task<IActionResult> AdminResponseFeedBack(int feedBackId,

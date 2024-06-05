@@ -15,12 +15,14 @@ public class HealthRecordResponse
     public string Notes { get; set; } = null!;
     public string StudentName { get; set; } = null!;
     public string Scholastic { get; set; } = null!;
+    public string DateOfBirth { get; set; } = null!;
 }
 public class MapperProfile : Profile
 {
     public MapperProfile()
     {
         CreateMap<Domain.Entities.HealthRecord, HealthRecordResponse>()
+            .ForMember(dto => dto.DateOfBirth, opt => opt.MapFrom(h => h.Student.Date))
             .ForMember(dto => dto.StudentName, opt => opt.MapFrom(h => h.Student.User.FullName));
     }
 }

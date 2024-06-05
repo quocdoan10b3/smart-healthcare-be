@@ -10,12 +10,16 @@ public class HealthInsuranceRespone
     public DateTime ExpDate { get; set; }
     public bool Status { get; set; }
     public string Scholastic { get; set; } = null!;
+    public DateTime DateOfBirth { get; set; }
+    public string Address { get; set; } = null!;
 }
 public class MapperProfile : Profile
 {
     public MapperProfile()
     {
         CreateMap<Domain.Entities.HealthInsurance, HealthInsuranceRespone>()
-            .ForMember(dto => dto.StudentName, opt => opt.MapFrom(h => h.Student.User.FullName));
+            .ForMember(dto => dto.StudentName, opt => opt.MapFrom(h => h.Student.User.FullName))
+            .ForMember(dto => dto.Address, opt => opt.MapFrom(h => h.Student.Address))
+            .ForMember(dto => dto.DateOfBirth, opt => opt.MapFrom(h => h.Student.Date));
     }
 }

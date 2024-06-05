@@ -5,6 +5,7 @@ using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.HealthRecord;
+using SmartHealthCare.Application.ViewModels.Student;
 using SmartHealthCare.Domain.Common;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Repositories;
@@ -43,7 +44,22 @@ public class HealthRecordService (
             .ToListAsync();
         return result;
     }
-    
+    public async Task<List<HealthRecordResponse>> GetHealthRecordByUserIdAsync(int userId,GetHealthRecordsRequest request)
+    {
+        
+        var student = await studentRepository.GetQuery(_ => _.UserId == userId)
+            .Include(s=> s.User)
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        var scholasticYear = request.Filter.GetEnumMemberValue().ToString();
+        var query = healthRecordRepository.GetQuery(_ => _.StudentId == student.Id)
+            .Include(hi => hi.Student.User)
+            .ProjectTo<HealthRecordResponse>(Mapper.ConfigurationProvider);
+        if (scholasticYear != "None")
+            query = query.Where(hr => hr.Scholastic == scholasticYear);
+        
+        return await query.ToListAsync();
+    }
     public async Task AddHealthRecordStudent(int studentId, AddHealthRecordRequest request)
     {
         bool studentExists = await studentRepository.AnyAsync(studentId);

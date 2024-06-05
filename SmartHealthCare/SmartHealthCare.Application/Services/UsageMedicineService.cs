@@ -5,6 +5,7 @@ using SmartHealthCare.Application.Common.Extensions;
 using SmartHealthCare.Application.Common.Interfaces;
 using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Medicine;
+using SmartHealthCare.Application.ViewModels.Student;
 using SmartHealthCare.Application.ViewModels.UsageMedicine;
 using SmartHealthCare.Domain.Entities;
 using SmartHealthCare.Domain.Repositories;
@@ -37,6 +38,21 @@ public class UsageMedicineService(
     {
         var result = await usageMedicineRepository.GetQuery(_ => _.StudentId == studentId)
             .Include(h=>h.Prescriptions)
+            .ProjectTo<HistoryResponse>(Mapper.ConfigurationProvider)
+            .ToPaginatedListAsync(request.PageNumber,request.PageSize);
+        return result;
+    }
+    public async Task<PaginatedList<HistoryResponse>> GetUsageMedicinesByUserIdAsync(int userId,HistoryRequest request)
+    {
+        var student = await studentRepository.GetQuery(_ => _.UserId == userId)
+            .Include(s=> s.User)
+            .ProjectTo<StudentResponse>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        var result = await usageMedicineRepository.Search(request.Search)
+            .Where(_ => _.StudentId == student.Id)
+            .Include(h=> h.Student)
+            .Include(h=>h.Prescriptions)
+            .OrderBy(GetOrderByField(request.SortBy), request.IsDescending)
             .ProjectTo<HistoryResponse>(Mapper.ConfigurationProvider)
             .ToPaginatedListAsync(request.PageNumber,request.PageSize);
         return result;
