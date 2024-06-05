@@ -7,7 +7,13 @@ public class GetStatisticsResponse
     public int? ImportedTypeOfMedicineCount { get; set; }
     public int? ImportedMedicineCount { get; set; }
     public int? UsageMedicineStudentCount { get; set; }
-    public int? UsageMedicinesCount { get; set; }
-    public string? NameMedicineUsageMax { get; set; }
-    public int? UsageTypeOfMedicineMax { get; set; }
+    public int? TotalUsageMedicinesCount { get; set; }
+
+    public List<MedicineUsage> TopMedicineUsages { get; set; } = new List<MedicineUsage>();
+}
+public class MedicineUsage
+{
+    public int MedicineId { get; set; }
+    public string NameMedicine { get; set; }
+    public int TotalQuantity { get; set; }
 }
