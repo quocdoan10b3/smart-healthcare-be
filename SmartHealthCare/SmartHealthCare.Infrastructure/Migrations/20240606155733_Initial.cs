@@ -64,8 +64,8 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Effect = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                    Effect = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageMedicine = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -200,6 +200,28 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Staff",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<bool>(type: "bit", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Staff", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Staff_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -224,6 +246,59 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MedicineImport",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    ImportDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsedCount = table.Column<int>(type: "int", nullable: false),
+                    MedicineId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicineImport", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicineImport_Medicines_MedicineId",
+                        column: x => x.MedicineId,
+                        principalTable: "Medicines",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MedicineImport_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreatAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notification_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FeedBacks",
                 columns: table => new
                 {
@@ -231,9 +306,9 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<float>(type: "real", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Response = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Response = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -257,11 +332,17 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     ExpDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    Scholastic = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Scholastic = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HealthInsurances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HealthInsurances_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_HealthInsurances_Students_StudentId",
                         column: x => x.StudentId,
@@ -281,15 +362,21 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     Height = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<int>(type: "int", nullable: false),
                     Vision = table.Column<int>(type: "int", nullable: false),
-                    Hearing = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DentalHealth = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Allergies = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Scholastic = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    Hearing = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    DentalHealth = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Allergies = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Scholastic = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HealthRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HealthRecords_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_HealthRecords_Students_StudentId",
                         column: x => x.StudentId,
@@ -306,11 +393,17 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     UsageDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Reason = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: true),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Histories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Histories_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Histories_Students_StudentId",
                         column: x => x.StudentId,
@@ -361,17 +454,17 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AvatarUrl", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, null, "c5a7d47f-b393-4a35-aa50-19acf1e75c4e", "example@gmail.com", true, "Admin", false, null, "EXAMPLE@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAED25TdgEROy7/3rOTE0Q709ulPk4etrtURFV3DDP7o5qPfeSsVHaEwRNLTjJ+/NOew==", null, false, "", "3f20af03-e399-4216-9a87-bd72a92e95a1", false, "admin" },
-                    { 2, 0, null, "effd5985-977a-44c4-ac6b-fbff9f3704ea", "Stuart_Jaskolski50@hotmail.com", true, "Emily Heathcote", false, null, "STUART_JASKOLSKI50@HOTMAIL.COM", "HS2021867", "AQAAAAIAAYagAAAAENdAVU/lQx/R4vunjLALfBK057LQD0KjRPtql8SXBy42h6ccuKOud2oBYahbJM1wTg==", null, false, "", "987ecb3d-c76f-4e48-aade-348b299c705d", false, "HS2021867" },
-                    { 3, 0, null, "455e0210-05e0-4368-b1f5-74fd0b22dd52", "Ayden24@gmail.com", true, "Alysson McDermott", false, null, "AYDEN24@GMAIL.COM", "HS2021844", "AQAAAAIAAYagAAAAEPkjejBz0FhZQwuYci4jWmrn3z3d0/Eioh3478Rkw9BpcB70bWx9t7xJYkvfC6G6Rg==", null, false, "", "839a0899-0e76-4e13-8fe3-0ee8bf62f67e", false, "HS2021844" },
-                    { 4, 0, null, "ab668ee6-87d9-4823-a89d-d19206364631", "Elena11@hotmail.com", true, "Stanton Cruickshank", false, null, "ELENA11@HOTMAIL.COM", "HS2022320", "AQAAAAIAAYagAAAAEJAjyqpBVPL5sUNSqfebs0OpS9Lneec7zaYyfs6z9LjqaZazfeT4HjH5RpLx5D2c2w==", null, false, "", "3c96324d-b8e0-4eeb-9b50-f4c7ab05a404", false, "HS2022320" },
-                    { 5, 0, null, "ab12240d-7570-4844-af25-054452002559", "Arturo54@gmail.com", true, "Hobart Klocko", false, null, "ARTURO54@GMAIL.COM", "HS2023505", "AQAAAAIAAYagAAAAEKBofNrcVS95oo6xs47ktdDzUaQTrp0QH8sx9kEDMZvcAwjIk+Pts9nCXkyPPE9oPg==", null, false, "", "9d003780-795c-451b-85b5-e4bd9f52e655", false, "HS2023505" },
-                    { 6, 0, null, "2d3f6c95-c4e6-462e-b3f7-c4abd4e47d2d", "Dangelo.Bahringer77@hotmail.com", true, "Ewell Gislason", false, null, "DANGELO.BAHRINGER77@HOTMAIL.COM", "HS2020423", "AQAAAAIAAYagAAAAEDp9pMiyFM7WubXQjN2xGe5ES2VOYpkg7dStJEtl4EF2kDmAGER+2uwo4i+zReJbdQ==", null, false, "", "c0fdf8a6-08e9-4051-9637-284185ef0618", false, "HS2020423" },
-                    { 7, 0, null, "cc872f95-2e78-44be-81ff-3560eac2fd53", "Adalberto45@hotmail.com", true, "Brycen Pacocha", false, null, "ADALBERTO45@HOTMAIL.COM", "HS2020698", "AQAAAAIAAYagAAAAEPV6cigNt1m8Ez25Ouv8Tr+Ap6IZl9iVLYirpWd9cSBpR3mpzXSy7L1TMgFkrOPyGg==", null, false, "", "336b9135-0c94-4816-96c5-3b7f63372f4d", false, "HS2020698" },
-                    { 8, 0, null, "2fdaeb6b-cba2-4e58-8b21-960804c24ee2", "Ellie.Hilpert95@yahoo.com", true, "Otha Heaney", false, null, "ELLIE.HILPERT95@YAHOO.COM", "HS2023931", "AQAAAAIAAYagAAAAEBgrsjhadclCjgLyZzPMIn4qHBKYJVPAqtf/Aio4R8tPtbUqvyw/V/o/mrBlyGEKRw==", null, false, "", "47552f79-9804-41c9-9ed7-c08afc2c7333", false, "HS2023931" },
-                    { 9, 0, null, "974b6ad9-81aa-402b-ae0c-dd67d0de5793", "Ike.Walter@gmail.com", true, "Damien Christiansen", false, null, "IKE.WALTER@GMAIL.COM", "HS2023609", "AQAAAAIAAYagAAAAEJqe2rL2fSqjZR/adwQec4m1FcM2goQRnJQHctQrezjOFVbai6C9P45cNeqW0uCR2w==", null, false, "", "777b505b-2711-47e6-a065-926069a8447c", false, "HS2023609" },
-                    { 10, 0, null, "ec914a93-11dd-48f6-b040-1b2e968298f8", "Ozella.Ondricka@hotmail.com", true, "Ola Torp", false, null, "OZELLA.ONDRICKA@HOTMAIL.COM", "HS2020275", "AQAAAAIAAYagAAAAEKuRG/XDGjuyMFJx5W/8KUCV7qZomizC4h19d7J4WQibu+cbUUntZ7j3ZTWrSbm9MA==", null, false, "", "72518e7b-435e-42c0-a28b-5167cf9050d5", false, "HS2020275" },
-                    { 11, 0, null, "1e77711f-e952-4ac9-ad28-15b901e5494c", "David_Windler@hotmail.com", true, "Maureen Torphy", false, null, "DAVID_WINDLER@HOTMAIL.COM", "HS2020064", "AQAAAAIAAYagAAAAEHFrazSs3olB/qnSXS+l4Dwe6B9YzdU8YnTGMH2UdLuTXERMAQgLKJDC8Hfj3aWLcw==", null, false, "", "6f0ba570-0a65-4ecb-bc69-bfe39d84d04f", false, "HS2020064" }
+                    { 1, 0, null, "53c849d6-ddd9-4701-a07a-321933da7bc9", "example@gmail.com", true, "Admin", false, null, "EXAMPLE@GMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEMOF8VWKj5EmuysIsY+JnWuLiZi53ZilvcZ4QVeWc3637kzdhwH03t8t34eTaJG6Jw==", null, false, "", "04bb83ff-4242-44a4-a1e0-88ca28e525cb", false, "admin" },
+                    { 2, 0, null, "3d8409d7-fd12-4de4-8a67-9c1cd92ca4d0", "Lilla_Hodkiewicz15@hotmail.com", true, "Grady Borer", false, null, "LILLA_HODKIEWICZ15@HOTMAIL.COM", "HS2020327", "AQAAAAIAAYagAAAAEIxreI7c6MNqdD9IwNyTwxgWY3WHP9+ziazK4Jg2F6FjqxF+HX+TxTDShyR7aYXSKA==", null, false, "", "0267a7c1-9dc6-4165-8e2d-103fa52cf129", false, "HS2020327" },
+                    { 3, 0, null, "16c6c558-0cce-419f-9f66-c93a63294d5d", "Monserrat_Hills@gmail.com", true, "Cathy Harris", false, null, "MONSERRAT_HILLS@GMAIL.COM", "HS2021767", "AQAAAAIAAYagAAAAELYPuO4hIW9KGC8tS7sbOBfp1crkUnDTMelHj/W9OM3ExxN90OHxns0PGNVWlWMJlg==", null, false, "", "bc4f1089-fad6-4dd1-8843-a5008e6433f0", false, "HS2021767" },
+                    { 4, 0, null, "c34520ef-cd7e-41d2-99f5-72786346a599", "Luz.Nitzsche@gmail.com", true, "Nathaniel Welch", false, null, "LUZ.NITZSCHE@GMAIL.COM", "HS2023580", "AQAAAAIAAYagAAAAELRoP9Gr3GZWXlefqg2QeLOIKAWztSbFbiriMbVzFLMj9EB2oGlTvrZWNmB4tPJeNA==", null, false, "", "a96d2060-4bfa-4b12-980f-5cb85c1e4d00", false, "HS2023580" },
+                    { 5, 0, null, "dea861b0-857e-4da4-9f43-e4f6fdbfada7", "Orrin.Carter45@gmail.com", true, "Porter Haley", false, null, "ORRIN.CARTER45@GMAIL.COM", "HS2020999", "AQAAAAIAAYagAAAAEG844lcqa4SyVCAm5e4KmhLjTzrcISPjgYif3J4uaWhopRvwxFUYgcv6Zrh9JoqhNw==", null, false, "", "4016ae93-d9ac-4040-aeeb-94576c38edfa", false, "HS2020999" },
+                    { 6, 0, null, "5fb25223-3bf6-418e-b47c-e8dcfccb0831", "Grayson_Crooks@yahoo.com", true, "Darlene Bashirian", false, null, "GRAYSON_CROOKS@YAHOO.COM", "HS2023729", "AQAAAAIAAYagAAAAEGoaaT63cmlFuc/+KDZ6zU5P8LZVBLdB2GPwFuzbq23Y2PGgohC8xGzqRs7F0Z38uQ==", null, false, "", "e3cf3f09-bc76-4029-8ba3-21ec521a68b9", false, "HS2023729" },
+                    { 7, 0, null, "1620662a-c334-472f-8d10-ece212b1e17f", "Ike30@gmail.com", true, "Alexys Altenwerth", false, null, "IKE30@GMAIL.COM", "HS2022098", "AQAAAAIAAYagAAAAEPjv8s0ytQj3HIGhd3EawxnkzBJ7+7aj4LKBMTqO/dof2UpyMFuuz0qlhU6O6VUizA==", null, false, "", "b0ac2fea-7718-4930-b883-df540e805e9b", false, "HS2022098" },
+                    { 8, 0, null, "0cfeef24-e7fb-468c-83a4-fbe925c5891e", "Fay.Fadel67@gmail.com", true, "Jane Abshire", false, null, "FAY.FADEL67@GMAIL.COM", "HS2023677", "AQAAAAIAAYagAAAAED2sTUqw0H3MTZuA6pHGacEXSfnHyYUSdPi/YF4IV+iXxZHDuKkEtVnnczMLoHadMQ==", null, false, "", "e2a5ff98-db83-4a42-8a5a-eda49a1e7db6", false, "HS2023677" },
+                    { 9, 0, null, "6e83696a-df8d-435a-aabc-83ef25ae2a4a", "Jefferey_Bashirian@hotmail.com", true, "Felipe Hane", false, null, "JEFFEREY_BASHIRIAN@HOTMAIL.COM", "HS2021677", "AQAAAAIAAYagAAAAEFepzLGIZ7j9ocmuXGpIX6pI1K/yWrSIafKQZzrXHxHlm+JhXJlmcketRKTIguF/oA==", null, false, "", "6e852835-1448-4b96-9cb8-73a5dc0312be", false, "HS2021677" },
+                    { 10, 0, null, "f9dfccdf-bfd1-4cd3-a517-7e2a5c6ddaa9", "Rickie_Schroeder52@yahoo.com", true, "Bill Altenwerth", false, null, "RICKIE_SCHROEDER52@YAHOO.COM", "HS2023632", "AQAAAAIAAYagAAAAEMeXVK2A+7XCx0qlcFYN1kCE0WyKjMU0PiEW17/r+Ty1efz79k0QWE1m3a3Kx9xIaQ==", null, false, "", "81f05b6d-bb3f-4250-99b7-4d801cd385e1", false, "HS2023632" },
+                    { 11, 0, null, "be025d20-1680-4577-bbcc-cbd2140078f7", "Nakia_Mayer15@gmail.com", true, "Kaci VonRueden", false, null, "NAKIA_MAYER15@GMAIL.COM", "HS2022171", "AQAAAAIAAYagAAAAEJoFaQ6RUana2GRx/Z1VTNcAcxKWviqjHb6T0P+gGRhoaQs74taeLFmOV2bCc955sQ==", null, false, "", "5b9817f0-71b6-4d80-888c-70aea4117dca", false, "HS2022171" }
                 });
 
             migrationBuilder.InsertData(
@@ -384,16 +477,16 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 columns: new[] { "Id", "Address", "Class", "Date", "Gender", "StudentCode", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "4325 Dagmar Squares, Kerlukeborough, Costa Rica", "9A", new DateTime(2011, 8, 22, 18, 7, 1, 727, DateTimeKind.Unspecified).AddTicks(5366), true, "HS2021867", 2 },
-                    { 2, "1931 Torrance Harbors, Eunicemouth, Brazil", "9A", new DateTime(2012, 8, 31, 13, 40, 29, 240, DateTimeKind.Unspecified).AddTicks(6587), true, "HS2021844", 3 },
-                    { 3, "330 Beer Square, Denesikstad, Poland", "9A", new DateTime(2011, 4, 2, 0, 53, 11, 469, DateTimeKind.Unspecified).AddTicks(3239), false, "HS2022320", 4 },
-                    { 4, "5664 Crona Cape, South Colinton, Chile", "9A", new DateTime(2010, 12, 21, 13, 36, 59, 540, DateTimeKind.Unspecified).AddTicks(6800), true, "HS2023505", 5 },
-                    { 5, "7799 Loyal Prairie, Maychester, Netherlands Antilles", "9A", new DateTime(2010, 3, 8, 12, 8, 39, 620, DateTimeKind.Unspecified).AddTicks(6589), true, "HS2020423", 6 },
-                    { 6, "49687 Schumm Springs, New Tyra, Honduras", "9A", new DateTime(2010, 5, 8, 6, 58, 16, 410, DateTimeKind.Unspecified).AddTicks(1833), false, "HS2020698", 7 },
-                    { 7, "75313 Swift Summit, Lake Gina, Mali", "9A", new DateTime(2008, 9, 23, 4, 30, 26, 760, DateTimeKind.Unspecified).AddTicks(9323), false, "HS2023931", 8 },
-                    { 8, "646 Odell Trail, Wolffville, Central African Republic", "9A", new DateTime(2013, 8, 10, 23, 48, 38, 336, DateTimeKind.Unspecified).AddTicks(2425), false, "HS2023609", 9 },
-                    { 9, "18646 Benton Points, Lake Jeanette, Antarctica (the territory South of 60 deg S)", "9A", new DateTime(2012, 2, 14, 10, 9, 34, 158, DateTimeKind.Unspecified).AddTicks(7737), true, "HS2020275", 10 },
-                    { 10, "05223 Otis Stream, Barrowsstad, Guatemala", "9A", new DateTime(2012, 1, 25, 23, 48, 16, 56, DateTimeKind.Unspecified).AddTicks(817), false, "HS2020064", 11 }
+                    { 1, "40334 Leo Stravenue, Pacochaville, Cote d'Ivoire", "9/1", new DateTime(2013, 7, 2, 21, 18, 50, 268, DateTimeKind.Unspecified).AddTicks(5382), false, "HS2020327", 2 },
+                    { 2, "7054 Jacobson Prairie, Shayleehaven, China", "9/1", new DateTime(2018, 3, 15, 2, 9, 9, 840, DateTimeKind.Unspecified).AddTicks(5368), false, "HS2021767", 3 },
+                    { 3, "46930 Olson Landing, West Talonbury, Pakistan", "9/1", new DateTime(2017, 5, 23, 2, 15, 17, 247, DateTimeKind.Unspecified).AddTicks(8740), false, "HS2023580", 4 },
+                    { 4, "0759 Kemmer Turnpike, Willmshaven, Mali", "9/1", new DateTime(2009, 6, 10, 17, 30, 32, 476, DateTimeKind.Unspecified).AddTicks(9519), false, "HS2020999", 5 },
+                    { 5, "9940 Jevon Cape, Emelyside, Bosnia and Herzegovina", "9/1", new DateTime(2009, 7, 7, 5, 35, 16, 688, DateTimeKind.Unspecified).AddTicks(2435), true, "HS2023729", 6 },
+                    { 6, "68254 Nia Islands, Jonesbury, Yemen", "9/1", new DateTime(2012, 2, 4, 23, 15, 34, 414, DateTimeKind.Unspecified).AddTicks(3477), false, "HS2022098", 7 },
+                    { 7, "3998 Gardner Coves, Lake Joesph, Honduras", "9/1", new DateTime(2015, 5, 26, 4, 35, 44, 455, DateTimeKind.Unspecified).AddTicks(4717), false, "HS2023677", 8 },
+                    { 8, "2636 Geoffrey Bypass, New Dock, Macedonia", "9/1", new DateTime(2016, 6, 3, 20, 10, 35, 549, DateTimeKind.Unspecified).AddTicks(1518), true, "HS2021677", 9 },
+                    { 9, "67934 Trenton Roads, East Talonside, Togo", "9/1", new DateTime(2015, 11, 22, 8, 21, 52, 814, DateTimeKind.Unspecified).AddTicks(2566), true, "HS2023632", 10 },
+                    { 10, "42159 Dallas Wells, West Delta, Morocco", "9/1", new DateTime(2012, 10, 30, 11, 13, 32, 996, DateTimeKind.Unspecified).AddTicks(9696), false, "HS2022171", 11 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -455,9 +548,19 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HealthInsurances_StaffId",
+                table: "HealthInsurances",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HealthInsurances_StudentId",
                 table: "HealthInsurances",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HealthRecords_StaffId",
+                table: "HealthRecords",
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HealthRecords_StudentId",
@@ -465,9 +568,29 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Histories_StaffId",
+                table: "Histories",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Histories_StudentId",
                 table: "Histories",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicineImport_MedicineId",
+                table: "MedicineImport",
+                column: "MedicineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicineImport_StaffId",
+                table: "MedicineImport",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notification_StaffId",
+                table: "Notification",
+                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prescriptions_HistoryId",
@@ -489,6 +612,12 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Staff_UserId",
+                table: "Staff",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_UserId",
@@ -525,6 +654,12 @@ namespace SmartHealthCare.Infrastructure.Migrations
                 name: "HealthRecords");
 
             migrationBuilder.DropTable(
+                name: "MedicineImport");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
+
+            migrationBuilder.DropTable(
                 name: "Prescriptions");
 
             migrationBuilder.DropTable(
@@ -538,6 +673,9 @@ namespace SmartHealthCare.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Medicines");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "Students");

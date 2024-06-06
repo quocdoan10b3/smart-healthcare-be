@@ -60,7 +60,8 @@ public class MedicineService(
                 UsedCount = 0,
                 MedicineId = request.MedicineId,
                 ImportDate = request.ImportDate,
-                ExpDate = request.ExpDate
+                ExpDate = request.ExpDate,
+                StaffId = request.StaffId
             };
             importMedicineRepository.Add(medicineImport);
             await unitOfWork.SaveChangesAsync();
@@ -90,7 +91,8 @@ public class MedicineService(
                 UsedCount = 0,
                 MedicineId = medicineId,
                 ImportDate = request.ImportDate,
-                ExpDate = request.ExpDate
+                ExpDate = request.ExpDate,
+                StaffId = request.StaffId
             };
             importMedicineRepository.Add(medicineImport);
             await UnitOfWork.SaveChangesAsync();

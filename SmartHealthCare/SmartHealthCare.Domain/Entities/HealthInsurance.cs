@@ -11,4 +11,6 @@ public class HealthInsurance : EntityBase
     public DateTime ExpDate { get; set; }
     public bool Status { get; set; }
     public string Scholastic { get; set; } = String.Empty;
+    public int StaffId { get; set; }
+    public Staff Staff { get; set; } = null!;
 }

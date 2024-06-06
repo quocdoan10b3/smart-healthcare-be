@@ -10,5 +10,7 @@ public class History : EntityBase
     public DateTime UsageDate { get; set; }
     [MaxLength(5000)]
     public string Reason { get; set; } = String.Empty;
+    public int StaffId { get; set; }
+    public Staff Staff { get; set; } = null!;
     public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 }

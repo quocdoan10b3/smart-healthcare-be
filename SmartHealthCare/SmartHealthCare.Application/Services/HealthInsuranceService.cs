@@ -84,7 +84,8 @@ public class HealthInsuranceService(
                 StudentId = studentId,
                 ExpDate = request.ExpDate,
                 Status = request.Status,
-                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}"
+                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}",
+                StaffId = request.StaffId
             };
             healthInsuranceRepository.Add(healthInsuranceStudent);
             await unitOfWork.SaveChangesAsync();

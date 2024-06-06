@@ -18,7 +18,7 @@ public class HealthInsuranceController : ControllerBase
     {
         _healthInsuranceService = healthInsuranceService;
     }
-    [Authorize(Roles = AppRole.Admin)]
+    [Authorize(Roles = AppRole.Admin  + "," + AppRole.Staff)]
     [HttpGet()]
     public async Task<IActionResult> GetAllHealthInsurance([FromQuery] GetHealthInsurancesRequest pqp)
     {
@@ -33,7 +33,7 @@ public class HealthInsuranceController : ControllerBase
         var response = await _healthInsuranceService.GetHealthInsuranceByStudentId(studentId);
         return Ok(response);
     }
-    [Authorize(Roles = AppRole.Admin)]
+    [Authorize(Roles = AppRole.Admin  + "," + AppRole.Staff)]
     [HttpPost("{studentId:int}")]
     public async Task<IActionResult> CreateHealthInsuranceStudent(int studentId, AddHealthInsuranceRequest request)
     {

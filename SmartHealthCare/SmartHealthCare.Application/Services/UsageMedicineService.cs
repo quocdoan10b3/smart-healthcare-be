@@ -80,7 +80,8 @@ public class UsageMedicineService(
                 {
                     StudentId = studentId,
                     UsageDate = request.UsageDate,
-                    Reason = request.Reason
+                    Reason = request.Reason,
+                    StaffId = request.StaffId
                 };
                 usageMedicineRepository.Add(historyUsage);
                 await UnitOfWork.SaveChangesAsync(); 

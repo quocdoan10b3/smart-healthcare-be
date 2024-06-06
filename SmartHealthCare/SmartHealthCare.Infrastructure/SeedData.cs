@@ -47,7 +47,7 @@ public static class SeedData
         foreach (var user in listUsers)
         {
             var student = new Faker<Student>().RuleFor(s => s.StudentCode, _ => user.UserName)
-                .RuleFor(s => s.Class, f => "9A")
+                .RuleFor(s => s.Class, f => "9/1")
                 .RuleFor(s => s.Date, f => f.Date.Between(new DateTime(2008, 01, 01), new DateTime(2018, 12, 31)))
                 .RuleFor(s => s.Gender, f => f.Random.Bool())
                 .RuleFor(s => s.Address, f => f.Address.FullAddress())

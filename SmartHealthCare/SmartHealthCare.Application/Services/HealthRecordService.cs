@@ -76,7 +76,8 @@ public class HealthRecordService (
                 DentalHealth = request.DentalHealth,
                 Allergies = request.Allergies,
                 Notes = request.Notes,
-                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}"
+                Scholastic = $"{request.Scholastic}-{int.Parse(request.Scholastic) + 1}",
+                StaffId = request.StaffId
             };
             healthRecordRepository.Add(healthRecordStudent);
             await unitOfWork.SaveChangesAsync();

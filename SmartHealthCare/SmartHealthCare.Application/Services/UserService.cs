@@ -16,7 +16,8 @@ public class UserService(
     IUnitOfWork unitOfWork,
     IMapper mapper,
     ICurrentUser currentUser,
-    UserManager<User> userManager) : BaseService(unitOfWork, mapper, currentUser)
+    UserManager<User> userManager,
+    IRepositoryBase<Staff> repositoryBase) : BaseService(unitOfWork, mapper, currentUser)
 {
     public async Task<PaginatedList<User>> GetAllUserAsync(GetUsersRequest request)
     {
@@ -26,6 +27,11 @@ public class UserService(
     public async Task<User> GetUserByIdAsync(int userId)
     {
         return await userManager.Users.Where(u=> u.Id == userId).FirstOrDefaultAsync();
+    }
+
+    public async Task<Staff> GetStaffByIdAsync(int userId)
+    {
+        return await repositoryBase.GetQuery(s => s.UserId == userId).FirstOrDefaultAsync();
     }
 
     public async Task UpdateAvatarAsync(int userId, UpsertUserRequest request)

@@ -17,6 +17,7 @@ public class AuthService(
 	IUnitOfWork unitOfWork,
 	IMapper mapper,
 	IRepositoryBase<Student> studentRepositoryBase,
+	IRepositoryBase<Staff> staffRepositoryBase,
 	ICurrentUser currentUser) : BaseService(unitOfWork, mapper, currentUser)
 {
 	public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -72,7 +73,15 @@ public class AuthService(
 				result = await userManager.AddToRoleAsync(user, AppRole.Staff);
 			if (!result.Succeeded)
 				throw new AppException(result.Errors.First().Description);
-
+			var staff = new Staff
+			{
+				UserId = user.Id,
+				Date = request.DateOfBirth,
+				Gender = request.Gender,
+				Address = request.Address
+			};
+			staffRepositoryBase.Add(staff);
+			await UnitOfWork.SaveChangesAsync();
 			await UnitOfWork.CommitAsync();
 		}
 		catch

@@ -34,4 +34,10 @@ public class UserController : ControllerBase
         await _userService.UpdateAvatarAsync(userId,request);
         return Ok();
     }
+    [HttpGet("staff/{userId:int}")]
+    public async Task<IActionResult> GetStaff(int userId)
+    {
+        var response = await _userService.GetStaffByIdAsync(userId);
+        return Ok(response);
+    }
 }
