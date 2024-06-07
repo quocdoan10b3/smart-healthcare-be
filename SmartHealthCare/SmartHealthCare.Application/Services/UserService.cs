@@ -39,6 +39,22 @@ public class UserService(
         var user = userManager.Users.Where(u => u.Id == userId).FirstOrDefaultAsync().Result;
         if( user != null ) user.AvatarUrl = request.AvatarUrl;
         await UnitOfWork.SaveChangesAsync();
-        
+    }
+
+    public async Task DeleteUserAsyc(int userId)
+    {
+        var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user != null)
+        {
+            var result = await userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                await unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Failed to delete user");
+            }
+        }
     }
 }

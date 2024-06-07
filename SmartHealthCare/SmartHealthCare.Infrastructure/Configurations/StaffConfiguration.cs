@@ -28,10 +28,12 @@ public class StaffConfiguration : IEntityTypeConfiguration<Staff>
             .OnDelete(DeleteBehavior.NoAction);
         builder.HasMany(s => s.Notifications)
             .WithOne(n => n.Staff)
-            .HasForeignKey(n => n.StaffId);
+            .HasForeignKey(n => n.StaffId)
+            .OnDelete(DeleteBehavior.NoAction);
         builder.HasMany(s => s.MedicineImports)
             .WithOne(n => n.Staff)
-            .HasForeignKey(n => n.StaffId);
+            .HasForeignKey(n => n.StaffId)
+            .OnDelete(DeleteBehavior.NoAction);
         builder.HasOne(s => s.User)
             .WithOne(u => u.Staff)
             .HasForeignKey<Staff>(s=>s.UserId);

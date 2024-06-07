@@ -45,4 +45,11 @@ public class FeedBackController : ControllerBase
         await _feedBackService.AdminResponseFeedBackAsync(feedBackId,request);
         return Ok();
     }
+    [Authorize(Roles = AppRole.Admin)]
+    [HttpDelete("{feedBackId:int}")]
+    public async Task<IActionResult> DeleteFeedBack(int feedBackId)
+    {
+        await _feedBackService.DeleteFeedBackAsync(feedBackId);
+        return Ok();
+    }
 }

@@ -6,6 +6,7 @@ using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.FeedBack;
 using SmartHealthCare.Application.ViewModels.Notification;
 using SmartHealthCare.Domain.Entities;
+using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
 using SmartHealthCare.Domain.Repositories.Base;
 
@@ -38,6 +39,14 @@ public class NotificationService (
         };
         notificationRepository.Add(news);
         await unitOfWork.SaveChangesAsync();
+    }
+    public async Task DeleteNewsAsync(int newsId)
+    {
+        var news = await notificationRepository.GetByIdAsync(newsId);
+        if (news == null)
+            throw new NotFoundException(nameof(Notification), newsId.ToString());
+        notificationRepository.Delete(news);
+        await UnitOfWork.SaveChangesAsync();
     }
     private static IOrderByField GetOrderByField(NotificationSortByOption? option)
     {

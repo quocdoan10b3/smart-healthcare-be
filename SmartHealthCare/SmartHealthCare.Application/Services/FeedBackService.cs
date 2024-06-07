@@ -96,4 +96,13 @@ public class FeedBackService(
             _ => throw new ArgumentOutOfRangeException(nameof(option), option, null)
         };
     }
+
+    public async Task DeleteFeedBackAsync(int feedBackId)
+    {
+        var feedBack = await feedBackRepository.GetByIdAsync(feedBackId);
+        if (feedBack == null)
+            throw new NotFoundException(nameof(FeedBack), feedBackId.ToString());
+        feedBackRepository.Delete(feedBack);
+        await UnitOfWork.SaveChangesAsync();
+    }
 }

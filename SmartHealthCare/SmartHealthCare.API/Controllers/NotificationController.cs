@@ -28,4 +28,11 @@ public class NotificationController : ControllerBase
         await _notificationService.CreatNewsAsync(request);
         return Ok();
     }
+    [Authorize(Roles = AppRole.Admin)]
+    [HttpDelete("{newsId:int}")]
+    public async Task<IActionResult> DeleteNews(int newsId)
+    {
+        await _notificationService.DeleteNewsAsync(newsId);
+        return Ok();
+    }
 }
