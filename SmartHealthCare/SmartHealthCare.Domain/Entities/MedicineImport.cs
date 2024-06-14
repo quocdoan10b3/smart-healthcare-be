@@ -10,6 +10,6 @@ public class MedicineImport: EntityBase
     public int UsedCount { get; set; }
     public int MedicineId { get; set; }
     public Medicine Medicine { get; set; } = null!;
-    public int StaffId { get; set; }
-    public Staff Staff { get; set; } = null!;
+    // public int StaffId { get; set; }
+    // public Staff Staff { get; set; } = null!;
 }

@@ -35,7 +35,8 @@ public class NotificationService (
             Content = request.Content,
             DateCreatAt = request.DateCreatAt,
             Image = request.Image,
-            StaffId = request.StaffId
+            // StaffId = request.StaffId,
+            UserId = request.UserId
         };
         notificationRepository.Add(news);
         await unitOfWork.SaveChangesAsync();

@@ -56,4 +56,10 @@ public class HealthRecordController : ControllerBase
         var response = await _healthRecordService.GetAllScholasticYearsAsync();
         return Ok(response);
     }
+    [HttpGet("list-scholastic/{userId:int}")]
+    public async Task<IActionResult> GetAllScholasticYearsByUserId(int userId)
+    {
+        var response = await _healthRecordService.GetAllScholasticYearsByUserIdAsync(userId);
+        return Ok(response);
+    }
 }

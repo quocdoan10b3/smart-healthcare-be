@@ -13,6 +13,6 @@ public class Staff : EntityBase
     public ICollection<HealthInsurance> HealthInsurances = new List<HealthInsurance>();
     public ICollection<History> Histories = new List<History>();
     public ICollection<HealthRecord> HealthRecords = new List<HealthRecord>();
-    public ICollection<Notification> Notifications = new List<Notification>();
-    public ICollection<MedicineImport> MedicineImports = new List<MedicineImport>();
+    // public ICollection<Notification> Notifications = new List<Notification>();
+    // public ICollection<MedicineImport> MedicineImports = new List<MedicineImport>();
 }

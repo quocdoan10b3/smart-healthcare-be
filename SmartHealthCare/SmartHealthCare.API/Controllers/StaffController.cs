@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.Staff;
-using SmartHealthCare.Application.ViewModels.Student;
 using SmartHealthCare.Domain;
 
 namespace SmartHealthCare.Controllers;
@@ -22,5 +21,17 @@ public class StaffController : ControllerBase
     {
         var response = await _staffService.GetAllStaffsAsync(pqp);
         return Ok(response);
+    }
+    [HttpGet("{userId:int}")]
+    public async Task<IActionResult> GetStaff(int userId)
+    {
+        var response = await _staffService.GetStaffByIdAsync(userId);
+        return Ok(response);
+    }
+    [HttpPut()]
+    public async Task<IActionResult> UpdateInfoStudent(int staffId, [FromBody] UpsertStaffRequest request)
+    {
+        await _staffService.UpdateInfoStaffAsync(staffId,request);
+        return Ok();
     }
 }

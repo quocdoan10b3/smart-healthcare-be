@@ -21,6 +21,10 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(StringLength.Phone);
         builder.Property(u => u.Role)
             .IsRequired();
+        builder.HasMany(s => s.Notifications)
+            .WithOne(n => n.User)
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
         builder.Property(u => u.AvatarUrl)
             .HasMaxLength(StringLength.Url);
         

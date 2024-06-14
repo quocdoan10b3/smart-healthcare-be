@@ -9,6 +9,8 @@ public class Notification : EntityBase
     public string? Content { get; set; } = String.Empty;
     public string? Image { get; set; } = String.Empty;
     public DateTime DateCreatAt { get; set; }
-    public int StaffId { get; set; }
-    public Staff Staff { get; set; } = null!;
+    // public int StaffId { get; set; }
+    // public Staff Staff { get; set; } = null!;
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
 }

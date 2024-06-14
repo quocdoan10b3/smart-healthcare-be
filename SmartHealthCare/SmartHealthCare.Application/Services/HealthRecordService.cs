@@ -112,4 +112,13 @@ public class HealthRecordService (
             .ToListAsync();
         return scholasticYears;
     }
+    public async Task<List<string>> GetAllScholasticYearsByUserIdAsync(int userId)
+    {
+        var scholasticYears = await healthRecordRepository.GetQuery()
+            .Where(hr=> hr.Student.User.Id == userId)
+            .Select(hr => hr.Scholastic)
+            .Distinct()
+            .ToListAsync();
+        return scholasticYears;
+    }
 }
