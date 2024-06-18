@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.User;
+using SmartHealthCare.Domain.Exceptions;
 
 namespace SmartHealthCare.Controllers;
 [ApiController]
@@ -44,7 +45,21 @@ public class UserController : ControllerBase
     [HttpDelete("{userId:int}")]
     public async Task<IActionResult> DeleteUser(int userId)
     {
-        await _userService.DeleteUserAsyc(userId);
+        await _userService.DeleteUserAsync(userId);
         return Ok();
+    }
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        try
+        {
+            await _userService.ChangePasswordAsync(request);
+            return Ok();
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

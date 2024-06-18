@@ -7,6 +7,7 @@ using SmartHealthCare.Application.Common.Models;
 using SmartHealthCare.Application.ViewModels.Auth.Responses;
 using SmartHealthCare.Application.ViewModels.User;
 using SmartHealthCare.Domain.Entities;
+using SmartHealthCare.Domain.Exceptions;
 using SmartHealthCare.Domain.Repositories;
 using SmartHealthCare.Domain.Repositories.Base;
 
@@ -24,12 +25,12 @@ public class UserService(
         return await userManager.Users.ToPaginatedListAsync(request.PageNumber, request.PageSize);
     }
 
-    public async Task<User> GetUserByIdAsync(int userId)
+    public async Task<User?> GetUserByIdAsync(int userId)
     {
         return await userManager.Users.Where(u=> u.Id == userId).FirstOrDefaultAsync();
     }
 
-    public async Task<Staff> GetStaffByIdAsync(int userId)
+    public async Task<Staff?> GetStaffByIdAsync(int userId)
     {
         return await repositoryBase.GetQuery(s => s.UserId == userId).FirstOrDefaultAsync();
     }
@@ -41,7 +42,7 @@ public class UserService(
         await UnitOfWork.SaveChangesAsync();
     }
 
-    public async Task DeleteUserAsyc(int userId)
+    public async Task DeleteUserAsync(int userId)
     {
         var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user != null)
@@ -56,5 +57,19 @@ public class UserService(
                 throw new Exception("Failed to delete user");
             }
         }
+    }
+
+    public async Task ChangePasswordAsync(ChangePasswordRequest request)
+    {
+        var userId = currentUser.Id;
+        var user = await userManager.FindByIdAsync(userId.ToString()) ?? throw new AuthException();
+        var result = await userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(e => e.Description).ToArray();
+            throw new AppException(string.Join(",", errors));
+        }
+
+        await UnitOfWork.SaveChangesAsync();
     }
 }
