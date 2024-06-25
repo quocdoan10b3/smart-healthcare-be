@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartHealthCare.Application.Services;
 using SmartHealthCare.Application.ViewModels.Auth.Requests;
+using SmartHealthCare.Domain.Exceptions;
 using LoginRequest = SmartHealthCare.Application.ViewModels.Auth.Requests.LoginRequest;
 
 namespace SmartHealthCare.Controllers;
@@ -53,5 +54,10 @@ public class AuthController : ControllerBase
     	await _tokenService.RevokeRefreshTokenAsync(refreshToken);
     	return Ok();
     }
-    
+	[HttpPost("reset-password")]
+	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+	{
+		await _authService.ResetPasswordAsync(request);
+		return Ok();
+	}
 }

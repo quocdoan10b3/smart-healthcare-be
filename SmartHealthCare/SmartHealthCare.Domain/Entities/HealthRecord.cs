@@ -8,8 +8,8 @@ public class HealthRecord : EntityBase
     public int StudentId { get; set; }
     public Student Student { get; set; } = null!;
     public DateTime ExamDate { get; set; }
-    public int Height { get; set; }
-    public int Weight { get; set; }
+    public float Height { get; set; }
+    public float Weight { get; set; }
     public int Vision { get; set; }
     [MaxLength(500)]
     public string Hearing { get; set; } = String.Empty;

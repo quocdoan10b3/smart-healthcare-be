@@ -16,6 +16,7 @@ public class AuthService(
 	UserManager<User> userManager,
 	IUnitOfWork unitOfWork,
 	IMapper mapper,
+	IEmailSender emailSender,
 	IRepositoryBase<Student> studentRepositoryBase,
 	IRepositoryBase<Staff> staffRepositoryBase,
 	ICurrentUser currentUser) : BaseService(unitOfWork, mapper, currentUser)
@@ -161,4 +162,57 @@ public class AuthService(
 
 		return tokenDto;
 	}
+
+	public async Task ResetPasswordAsync(ResetPasswordRequest request)
+	{
+		var user = await userManager.FindByNameAsync(request.UserName);
+		if (user == null) throw new NotFoundException(nameof(User), request.UserName);
+		if (user.Email != request.Email || user.FullName != request.FullName)
+			throw new AuthException();
+		var newPassword = RandomPassword(8);
+		var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+		var result = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
+		if (!result.Succeeded)
+		{
+			throw new Exception();
+		}
+		var subject = "Website quản lý y tế học đường";
+		var content = $"<p>Mật khẩu tài khoản của bạn vừa được reset. Dưới đây là thông tin chi tiết mật khẩu của bạn:</p>" +
+		              $"<p><strong>Họ và tên:</strong> {user.FullName}</p>" +
+		              $"<p><strong>Username:</strong> {user.UserName}</p>" +
+		              $"<p><strong>Password:</strong> {newPassword}</p>" +
+		              $"<p>Hãy đăng nhập và đổi mật khẩu sớm nhất có thể.</p>";
+		var message = new Message(new List<string> { user.Email! }, subject, content);
+		await emailSender.SendEmailAsync(message);
+	}
+	private string RandomPassword(int length)
+	{
+		const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		const string lowercase = "abcdefghijklmnopqrstuvwxyz";
+		const string digits = "0123456789";
+		const string specialChars = "!@#$%^&*()_+[]{}|;:,.<>?";
+		const string allChars = uppercase + lowercase + digits + specialChars;
+		Random random = new Random();
+    
+		string password = new string(Enumerable.Repeat(allChars, length)
+			.Select(s => s[random.Next(s.Length)]).ToArray());
+		if (!password.Any(char.IsUpper))
+			password = ReplaceChar(password, uppercase[random.Next(uppercase.Length)], random.Next(password.Length));
+		if (!password.Any(char.IsLower))
+			password = ReplaceChar(password, lowercase[random.Next(lowercase.Length)], random.Next(password.Length));
+		if (!password.Any(char.IsDigit))
+			password = ReplaceChar(password, digits[random.Next(digits.Length)], random.Next(password.Length));
+		if (!password.Any(c => specialChars.Contains(c)))
+			password = ReplaceChar(password, specialChars[random.Next(specialChars.Length)], random.Next(password.Length));
+		
+		return password;
+	}
+
+	private string ReplaceChar(string str, char newChar, int index)
+	{
+		var chars = str.ToCharArray();
+		chars[index] = newChar;
+		return new string(chars);
+	}
+
 }

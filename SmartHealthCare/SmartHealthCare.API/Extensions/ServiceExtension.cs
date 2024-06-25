@@ -109,6 +109,7 @@ public static class ServiceExtension
 
 		builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 		builder.Services.Configure<MinioSettings>(builder.Configuration.GetSection("MinioSettings"));
+		builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailConfiguration"));
 	}
 
 	public static IServiceCollection AddAuthentication(this IServiceCollection services,

@@ -33,6 +33,7 @@ builder.Services
     .AddExceptionHandler<GlobalExceptionHandler>()
     .AddAuthentication(builder.Configuration)
     .AddMinio(builder.Configuration)
+    .AddEmailSender()
     .AddValidatorsFromAssemblyContaining<IRequest>(ServiceLifetime.Singleton);
 
 var app = builder.Build();
