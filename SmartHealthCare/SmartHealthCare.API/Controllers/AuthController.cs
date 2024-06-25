@@ -34,6 +34,12 @@ public class AuthController : ControllerBase
 		await _authService.AddStudentAsync(request);
 		return Ok();
 	}
+	[HttpPost("add-list-students")]
+	public async Task<IActionResult> AddListStudents(List<AddStudentRequest> request)
+	{
+		await _authService.AddListStudentsAsync(request);
+		return Ok();
+	}
 	[HttpPost("login")]
 	public async Task<IActionResult> Login(LoginRequest request)
 	{

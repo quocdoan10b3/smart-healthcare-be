@@ -140,6 +140,75 @@ public class AuthService(
 			throw;
 		}
 	}
+	public async Task AddListStudentsAsync(List<AddStudentRequest> requests)
+	{
+	    var failedRequests = new List<AddStudentRequest>();
+	    
+	    await UnitOfWork.BeginTransactionAsync();
+	    try
+	    {
+	        foreach (var request in requests)
+	        {
+	            var isEmailTaken = await userManager.FindByEmailAsync(request.Email) != null;
+	            if (isEmailTaken)
+	            {
+	                failedRequests.Add(request);
+	                continue;
+	            }
+
+	            var isUserNameTaken = await userManager.FindByNameAsync(request.UserName) != null;
+	            if (isUserNameTaken)
+	            {
+	                failedRequests.Add(request);
+	                continue;
+	            }
+
+	            var user = new User
+	            {
+	                UserName = request.UserName,
+	                Email = request.Email,
+	                FullName = request.FullName,
+	                Role = "student",
+	                AvatarUrl = request.AvatarUrl
+	            };
+
+	            var result = await userManager.CreateAsync(user, request.Password);
+	            if (result.Succeeded)
+	                result = await userManager.AddToRoleAsync(user, AppRole.Student);
+
+	            if (!result.Succeeded)
+	            {
+	                failedRequests.Add(request);
+	                continue;
+	            }
+
+	            var student = new Student
+	            {
+	                UserId = user.Id,
+	                StudentCode = request.UserName,
+	                Class = request.Class,
+	                Date = request.DateOfBirth,
+	                Gender = request.Gender,
+	                Address = request.Address
+	            };
+
+	            studentRepositoryBase.Add(student);
+	        }
+
+	        await UnitOfWork.SaveChangesAsync();
+	        await UnitOfWork.CommitAsync();
+	    }
+	    catch
+	    {
+	        await UnitOfWork.RollbackAsync();
+	        throw;
+	    }
+
+	    if (failedRequests.Any())
+	    {
+	        throw new Exception("Some students could not be added.");
+	    }
+	}
 
 	public async Task<RefreshTokenResponse> RefreshTokenAsync(string refreshToken)
 	{
