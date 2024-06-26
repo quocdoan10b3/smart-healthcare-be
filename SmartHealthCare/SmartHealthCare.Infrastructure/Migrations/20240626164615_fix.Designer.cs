@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartHealthCare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SmartHealthCare.Infrastructure.Data;
 namespace SmartHealthCare.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240626164615_fix")]
+    partial class fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,8 +281,8 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<float>("Height")
-                        .HasColumnType("real");
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .IsRequired()
@@ -299,8 +302,8 @@ namespace SmartHealthCare.Infrastructure.Migrations
                     b.Property<int>("Vision")
                         .HasColumnType("int");
 
-                    b.Property<float>("Weight")
-                        .HasColumnType("real");
+                    b.Property<int>("Weight")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -641,17 +644,17 @@ namespace SmartHealthCare.Infrastructure.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ecbdf251-9a1b-49f0-b75d-425aceb03c69",
+                            ConcurrencyStamp = "38749468-0522-447e-8331-cb03f7c2c640",
                             Email = "example@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "EXAMPLE@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHk0bPz9r6ymxyfodXKHqZSLiiB7y+Mk98bksuOgkqx4gbgYKsEF7LvGEPRj57LrYg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAghMLXJlB5Qx4PgrNDQ2inoTqhZYDNI9MHq7zZfkZpxkyzQMCNuvsGcVQlSsvaUOw==",
                             PhoneNumberConfirmed = false,
                             Role = "",
-                            SecurityStamp = "4a20a733-2088-427c-bedc-3859c3c43eb3",
+                            SecurityStamp = "1a9af773-fc02-4b5f-a71f-3fe4239994ba",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
